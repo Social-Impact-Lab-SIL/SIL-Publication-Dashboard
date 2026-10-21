@@ -162,24 +162,60 @@ function CountList({ scheme, counts, prompt }) {
   );
 }
 
+const WAVE_STATUS = {
+  covered: "Covered in December 2023",
+  special: "Special populations only",
+  none: "Not covered in December 2023",
+};
+
 function Waveform() {
   const abbrs = Object.keys(TILES).sort();
   const statusOf = (st) => (ML.states[st].coveredDec ? "covered" : (SPECIAL_NOTES[st] ? "special" : "none"));
+  const [ref, measured] = useWidth(980);
+  const W = Math.max(940, measured), H = 200, padL = 40, padR = 4, padT = 10, padB = 26;
+  const slot = (W - padL - padR) / abbrs.length;
+  const barW = Math.min(12, slot * 0.62);
+  const max = ML.totalYears;
+  const y = (v) => H - padB - (v / max) * (H - padT - padB);
+  const ticks = [0, 7, 14, 21];
   return (
     <figure style={{ margin: 0 }}>
-      <div className="hh-waveform" role="img"
-        aria-label={`Bar chart: one bar per jurisdiction, height shows years with adult Medicaid hearing aid coverage, ${ML_Y0}–${ML_Y1}.`}>
-        {abbrs.map((st) => {
-          const yrs = ML.states[st].yearsCovered;
-          return (
-            <div key={st} className={`hh-waveform__bar fill-${statusOf(st)}`}
-              style={{ height: 6 + (yrs / ML.totalYears) * 96 }}
-              title={`${NAMES[st]} — ${yrs} of ${ML.totalYears} years covered`} />
-          );
-        })}
+      <p className="label" style={{ margin: "0 0 6px", color: "var(--ink)" }}>
+        Years with adult Medicaid hearing aid coverage, {ML_Y0}–{ML_Y1}, by state
+      </p>
+      <p className="source-note" style={{ margin: "0 0 4px", color: "var(--ink-soft)" }}>Years covered</p>
+      <div ref={ref} style={{ overflowX: "auto" }}>
+        <svg className="chart" viewBox={`0 0 ${W} ${H}`} style={{ minWidth: 940 }} role="img"
+          aria-label={`Bar chart of years with adult Medicaid hearing aid coverage, ${ML_Y0} to ${ML_Y1}, for each state and D.C.`}>
+          {ticks.map((t) => (
+            <g key={t}>
+              <line className="grid" x1={padL} x2={W - padR} y1={y(t)} y2={y(t)} />
+              <text className="axis-text" x={padL - 8} y={y(t) + 4} textAnchor="end">{t}</text>
+            </g>
+          ))}
+          {abbrs.map((st, i) => {
+            const yrs = ML.states[st].yearsCovered;
+            const cx = padL + slot * (i + 0.5);
+            const h = Math.max(2, y(0) - y(yrs));
+            return (
+              <g key={st}>
+                <title>{`${NAMES[st]}: ${yrs} of ${max} years covered; ${WAVE_STATUS[statusOf(st)].toLowerCase()}`}</title>
+                <rect x={cx - barW / 2} y={y(0) - h} width={barW} height={h} rx={2} className={`fill-${statusOf(st)}`} />
+                <text className="axis-text" x={cx} y={H - 8} textAnchor="middle" style={{ fontSize: 10 }}>{st}</text>
+              </g>
+            );
+          })}
+        </svg>
       </div>
-      <figcaption className="source-note" style={{ color: "var(--ink-soft)" }}>
-        One bar per jurisdiction (A–Z) · height = years with adult Medicaid hearing aid coverage, {ML_Y0}–{ML_Y1} · colour = status in December {ML_Y1} (teal covered, amber special populations only, grey not covered). Source: {CITE.aja}, study data.
+      {measured < 940 && <p className="source-note" style={{ color: "var(--ink-soft)", margin: "4px 0 0" }}>Scroll sideways to see all states.</p>}
+      <div className="hh-legend small">
+        {Object.entries(WAVE_STATUS).map(([k, l]) => (
+          <span key={k} className="hh-legend__item"><span className={`hh-swatch fill-${k}`} />{l}</span>
+        ))}
+      </div>
+      <figcaption className="hh-source source-note">
+        Each bar is one state or D.C., in alphabetical order by postal code. Bar height is the number of years from {ML_Y0} to {ML_Y1} with
+        coverage for any part of the year (maximum {max}). Source: {CITE.aja}, study data.
       </figcaption>
     </figure>
   );
@@ -349,10 +385,10 @@ function MedicaidMap() {
               {SPECIAL_NOTES[sel] && <p className="panel-note small">{SPECIAL_NOTES[sel]}</p>}
               {b && (
                 <div className="small" style={{ marginTop: 10 }}>
-                  <div className="panel-row"><span>Hearing loss eligibility</span><span>{b.eligibility}</span></div>
+                  <div className="panel-row"><span>Hearing loss eligibility</span><span>{notStated(b.eligibility)}</span></div>
                   <div className="panel-row"><span>Benefit frequency</span><span>{months(b.frequency)}</span></div>
                   <div className="panel-row"><span>Cost sharing</span><span>{notStated(b.costSharing)}</span></div>
-                  <div className="panel-row"><span>Hearing aids</span><span>{b.aids}</span></div>
+                  <div className="panel-row"><span>Hearing aids</span><span>{notStated(b.aids)}</span></div>
                 </div>
               )}
               {M23.notInBenefitFile.includes(sel) && <p className="panel-note small">Coverage was in place in December 2023. Benefit details for 2023 are not yet coded for this state.</p>}
@@ -466,13 +502,13 @@ function LifeCourse() {
       <h3 className="hh-subhead">Mandated coverage by household income, 2023</h3>
       <p className="hh-card__body body">
         Because Medicaid is the main route to mandated coverage, people below the federal poverty threshold were more likely
-        to have it than people above it in every age group. Even so, most adults below the threshold had no mandated coverage.
+        to have it than people at or above the federal poverty threshold in every age group. Even so, most adults below the federal poverty threshold had no mandated coverage.
       </p>
       <div className="table-scroll">
         <table className="hh-table">
           <caption className="sr-only">Percentage with mandated hearing aid coverage by age group and household characteristics, 2023</caption>
           <thead>
-            <tr><th scope="col">Age group</th><th scope="col" className="num">Below poverty threshold</th><th scope="col" className="num">At or above threshold</th><th scope="col" className="num">Renters</th><th scope="col" className="num">Homeowners</th></tr>
+            <tr><th scope="col">Age group</th><th scope="col" className="num">Below federal poverty threshold</th><th scope="col" className="num">At or above federal poverty threshold</th><th scope="col" className="num">Renters</th><th scope="col" className="num">Homeowners</th></tr>
           </thead>
           <tbody>
             {INCOME_2023.map((r) => (
@@ -497,7 +533,7 @@ function PolicyFeatures() {
     <section id="features" className="hh-card">
       <SectionTitle kicker="Medicaid benefit design · 2023" title="What Medicaid coverage includes" />
       <p className="hh-card__body body">
-        Among the {n} covering states with 2023 benefit details coded{M23.notInBenefitFile.length ? ` (all except ${M23.notInBenefitFile.map((k) => NAMES[k]).join(" and ")})` : ""}, benefit design varied. A state can cover a
+        Among the {n} states with adult Medicaid hearing aid coverage in 2023{M23.notInBenefitFile.length ? ` (benefit details not yet coded for ${M23.notInBenefitFile.map((k) => NAMES[k]).join(" and ")})` : ""}, benefit design varied. A state can cover a
         hearing aid yet leave out the services that make sustained use possible.
       </p>
       <div>
@@ -511,7 +547,7 @@ function PolicyFeatures() {
         provider discretion and {e["Mild HL or Greater"]} required at least mild hearing loss. The most common benefit
         period was every 60 months ({f["60"]} states).
       </p>
-      <SourceNote>Counts of covering states, including Missouri and Utah. Source: {CITE.ha}, study data.</SourceNote>
+      <SourceNote>Counts of covering states, including Missouri and Utah. Source: {CITE.ha}, study data (version 1.1, updated September 2026, which adds Nevada).</SourceNote>
     </section>
   );
 }
@@ -570,7 +606,7 @@ function Publications() {
       {PUBLICATIONS.map((p) => (
         <article key={p.doi} className="hh-pub">
           <p className="hh-pub__citation citation">{p.citation}</p>
-          <p className="hh-pub__venue">{p.venue} · <a href={`https://doi.org/${p.doi}`} target="_blank" rel="noopener noreferrer">doi:{p.doi}</a></p>
+          <p className="hh-pub__venue">{p.venue} · <a href={`https://doi.org/${p.doi}`}>doi:{p.doi}</a></p>
           <p className="hh-pub__note small">{p.note}</p>
         </article>
       ))}
@@ -599,9 +635,10 @@ function OpenData() {
         </div>
       ))}
       <div className="hh-callout small" style={{ marginTop: 16 }}>
-        <strong>Use the data.</strong> Dataset and replication materials:{" "}
-        {LINKS.openicpsr ? <a href={LINKS.openicpsr} target="_blank" rel="noopener noreferrer">OpenICPSR deposit</a> : <span>OpenICPSR deposit <span className="hh-callout__muted">(link to be added)</span></span>}
-        {" "}· <a href={LINKS.github} target="_blank" rel="noopener noreferrer">GitHub repository</a>
+        <strong>Use the data.</strong> Download the files from the{" "}
+        <a href={LINKS.openicpsr}>ICPSR repository record</a> ({LINKS.repositoryLabel}). Site code is in the{" "}
+        <a href={LINKS.github}>GitHub repository</a>.
+        <span className="hh-callout__muted"> Any publication or public output using these data must cite the associated peer-reviewed article and the versioned repository record.</span>
       </div>
     </section>
   );
@@ -610,106 +647,10 @@ function OpenData() {
 /* ============================ app ============================ */
 
 export default function App() {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  // Close dropdown if clicking outside of it
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (!event.target.closest('#sil-nav-container')) {
-        setIsDropdownOpen(false);
-      }
-    };
-    document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
-  }, []);
-
   return (
     <>
       <header className="hh-header">
-        <div className="hh-header__inner" style={{ flexWrap: 'wrap', gap: '12px' }}>
-          
-          {/* Click-to-Toggle Dropdown Navigation Menu */}
-          <div id="sil-nav-container" style={{ position: 'relative', display: 'inline-block' }}>
-            <button 
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              style={{
-                backgroundColor: 'var(--accent-bg, #f1f8ff)',
-                color: 'var(--accent, #0366d6)',
-                padding: '8px 16px',
-                fontSize: '14px',
-                fontWeight: '600',
-                border: '1px solid var(--accent-border, #c8e1ff)',
-                borderRadius: '6px',
-                cursor: 'pointer',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px'
-              }}
-            >
-              📁 SIL Navigation {isDropdownOpen ? '▴' : '▾'}
-            </button>
-            {isDropdownOpen && (
-              <div style={{
-                position: 'absolute',
-                left: 0,
-                top: '100%',
-                backgroundColor: '#ffffff',
-                minWidth: '260px',
-                boxShadow: '0 8px 24px rgba(149, 157, 165, 0.2)',
-                border: '1px solid #e1e4e8',
-                borderRadius: '6px',
-                zIndex: 1000,
-                marginTop: '4px',
-                overflow: 'hidden',
-                textAlign: 'left'
-              }}>
-                <a 
-                  href="https://social-impact-lab-sil.github.io" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  onClick={() => setIsDropdownOpen(false)}
-                  style={{ color: '#24292e', padding: '10px 16px', textDecoration: 'none', display: 'block', fontSize: '14px', borderBottom: '1px solid #eaecef' }}
-                >
-                  🏠 SIL Homepage
-                </a>
-                <a 
-                  href="https://github.com/Social-Impact-Lab-SIL" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  onClick={() => setIsDropdownOpen(false)}
-                  style={{ color: '#24292e', padding: '10px 16px', textDecoration: 'none', display: 'block', fontSize: '14px', borderBottom: '1px solid #eaecef' }}
-                >
-                  🌐 SIL GitHub
-                </a>
-                <a 
-                  href="https://social-impact-lab-sil.github.io/SIL-Publications-Archive/" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  onClick={() => setIsDropdownOpen(false)}
-                  style={{ color: '#24292e', padding: '10px 16px', textDecoration: 'none', display: 'block', fontSize: '14px', borderBottom: '1px solid #eaecef' }}
-                >
-                  📚 Publications Archive
-                </a>
-                <a 
-                  href="https://social-impact-lab-sil.github.io/SIL-Data-Repository/" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  onClick={() => setIsDropdownOpen(false)}
-                  style={{ color: '#24292e', padding: '10px 16px', textDecoration: 'none', display: 'block', fontSize: '14px', borderBottom: '1px solid #eaecef' }}
-                >
-                  🏠 Data Repository
-                </a>
-                <a 
-                  href="./" 
-                  onClick={() => setIsDropdownOpen(false)}
-                  style={{ color: '#24292e', padding: '10px 16px', textDecoration: 'none', display: 'block', fontSize: '14px' }}
-                >
-                  📊 Lab Dashboard
-                </a>
-              </div>
-            )}
-          </div>
-
+        <div className="hh-header__inner">
           <a className="hh-header__brand" href="#top" aria-label="Hearing Health Policy Database, top of page">
             <img className="logo-light" src={`${BASE}brand/hhpd-lockup.svg`} alt="Hearing Health Policy Database" width="179" height="40" />
             <img className="logo-dark" src={`${BASE}brand/hhpd-lockup-reversed.svg`} alt="Hearing Health Policy Database" width="179" height="40" />
@@ -732,9 +673,10 @@ export default function App() {
           <p className="kicker" style={{ color: "var(--ink-soft)", margin: "0 0 10px" }}>Hearing Health Policy Tracker</p>
           <h1 className="display">Tracking hearing aid coverage policy across the United States</h1>
           <p className="lead">
-            Legal epidemiology surveillance of hearing aid coverage law in the 50 states and D.C.: adult Medicaid coverage
-            since {ML_Y0}, private insurance mandates since {PRIV.years[0]}, and mandated coverage across Medicaid, private
-            insurance, the VA and TRICARE. Built for researchers, advocates and the policymakers deciding what comes next.
+            The Tracker monitors hearing aid coverage laws and policies in all 50 states and the District of Columbia.
+            It reports adult Medicaid hearing aid coverage since {ML_Y0}, state private insurance mandates since {PRIV.years[0]},
+            and the share of people with mandated coverage through Medicaid, private insurance, the Department of
+            Veterans Affairs and TRICARE.
           </p>
           <div className="hh-stats">
             <Stat value={M23.coveringTotal} label={`states covered hearing aids for adult Medicaid beneficiaries in December 2023, ${M23.statusCounts.special} of them for special populations only`} />
