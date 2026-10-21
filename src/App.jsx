@@ -748,9 +748,9 @@ export default function App() {
           </div>
 
           <a className="hh-header__brand" href="#top" aria-label="Hearing Health Policy Database, top of page">
-            <img className="logo-light" src={`${BASE}brand/hhpd-lockup.svg`} alt="Hearing Health Policy Database" width="179" height="40" />
-            <img className="logo-dark" src={`${BASE}brand/hhpd-lockup-reversed.svg`} alt="Hearing Health Policy Database" width="179" height="40" />
-          </a>
+  <img className="logo-light" src="./brand/hhpd-lockup.svg" alt="Hearing Health Policy Database" width="179" height="40" />
+  <img className="logo-dark" src="./brand/hhpd-lockup-reversed.svg" alt="Hearing Health Policy Database" width="179" height="40" />
+</a>
           <nav className="hh-nav label" aria-label="Sections">
             <a href="#medicaid">Medicaid</a>
             <a href="#private">Private insurance</a>
