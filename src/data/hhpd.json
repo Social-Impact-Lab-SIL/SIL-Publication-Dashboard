@@ -1,0 +1,2292 @@
+{
+ "names": {
+  "AL": "Alabama",
+  "AK": "Alaska",
+  "AZ": "Arizona",
+  "AR": "Arkansas",
+  "CA": "California",
+  "CO": "Colorado",
+  "CT": "Connecticut",
+  "DE": "Delaware",
+  "DC": "District of Columbia",
+  "FL": "Florida",
+  "GA": "Georgia",
+  "HI": "Hawaii",
+  "ID": "Idaho",
+  "IL": "Illinois",
+  "IN": "Indiana",
+  "IA": "Iowa",
+  "KS": "Kansas",
+  "KY": "Kentucky",
+  "LA": "Louisiana",
+  "ME": "Maine",
+  "MD": "Maryland",
+  "MA": "Massachusetts",
+  "MI": "Michigan",
+  "MN": "Minnesota",
+  "MS": "Mississippi",
+  "MO": "Missouri",
+  "MT": "Montana",
+  "NE": "Nebraska",
+  "NV": "Nevada",
+  "NH": "New Hampshire",
+  "NJ": "New Jersey",
+  "NM": "New Mexico",
+  "NY": "New York",
+  "NC": "North Carolina",
+  "ND": "North Dakota",
+  "OH": "Ohio",
+  "OK": "Oklahoma",
+  "OR": "Oregon",
+  "PA": "Pennsylvania",
+  "RI": "Rhode Island",
+  "SC": "South Carolina",
+  "SD": "South Dakota",
+  "TN": "Tennessee",
+  "TX": "Texas",
+  "UT": "Utah",
+  "VT": "Vermont",
+  "VA": "Virginia",
+  "WA": "Washington",
+  "WV": "West Virginia",
+  "WI": "Wisconsin",
+  "WY": "Wyoming"
+ },
+ "medicaidLongitudinal": {
+  "years": [
+   2003,
+   2023
+  ],
+  "totalYears": 21,
+  "states": {
+   "AK": {
+    "continuity": "continuous",
+    "yearsCovered": 21,
+    "monthsCovered": 252,
+    "coveredDec": true,
+    "determination": "Yes",
+    "events": []
+   },
+   "AL": {
+    "continuity": "never",
+    "yearsCovered": 0,
+    "monthsCovered": 0,
+    "coveredDec": false,
+    "determination": "No",
+    "events": []
+   },
+   "AR": {
+    "continuity": "never",
+    "yearsCovered": 0,
+    "monthsCovered": 0,
+    "coveredDec": false,
+    "determination": "No",
+    "events": []
+   },
+   "AZ": {
+    "continuity": "never",
+    "yearsCovered": 0,
+    "monthsCovered": 0,
+    "coveredDec": false,
+    "determination": "No",
+    "events": []
+   },
+   "CA": {
+    "continuity": "continuous",
+    "yearsCovered": 21,
+    "monthsCovered": 252,
+    "coveredDec": true,
+    "determination": "Yes",
+    "events": []
+   },
+   "CO": {
+    "continuity": "never",
+    "yearsCovered": 0,
+    "monthsCovered": 0,
+    "coveredDec": false,
+    "determination": "No",
+    "events": []
+   },
+   "CT": {
+    "continuity": "continuous",
+    "yearsCovered": 21,
+    "monthsCovered": 252,
+    "coveredDec": true,
+    "determination": "Yes",
+    "events": []
+   },
+   "DC": {
+    "continuity": "never",
+    "yearsCovered": 0,
+    "monthsCovered": 0,
+    "coveredDec": false,
+    "determination": "No",
+    "events": []
+   },
+   "DE": {
+    "continuity": "never",
+    "yearsCovered": 0,
+    "monthsCovered": 0,
+    "coveredDec": false,
+    "determination": "No",
+    "events": []
+   },
+   "FL": {
+    "continuity": "adopted",
+    "yearsCovered": 18,
+    "monthsCovered": 210,
+    "coveredDec": true,
+    "determination": "Removed 07/2002; Restored 07/2006",
+    "events": [
+     {
+      "type": "start",
+      "month": 7,
+      "year": 2006,
+      "label": "Coverage began July 2006"
+     }
+    ]
+   },
+   "GA": {
+    "continuity": "never",
+    "yearsCovered": 0,
+    "monthsCovered": 0,
+    "coveredDec": false,
+    "determination": "No",
+    "events": []
+   },
+   "HI": {
+    "continuity": "continuous",
+    "yearsCovered": 21,
+    "monthsCovered": 252,
+    "coveredDec": true,
+    "determination": "Yes",
+    "events": []
+   },
+   "IA": {
+    "continuity": "continuous",
+    "yearsCovered": 21,
+    "monthsCovered": 252,
+    "coveredDec": true,
+    "determination": "Yes",
+    "events": []
+   },
+   "ID": {
+    "continuity": "removed",
+    "yearsCovered": 9,
+    "monthsCovered": 102,
+    "coveredDec": false,
+    "determination": "Yes, until 7/3/2011",
+    "events": [
+     {
+      "type": "end",
+      "month": 7,
+      "year": 2011,
+      "label": "Coverage ended July 2011"
+     }
+    ]
+   },
+   "IL": {
+    "continuity": "continuous",
+    "yearsCovered": 21,
+    "monthsCovered": 252,
+    "coveredDec": true,
+    "determination": "Yes",
+    "events": []
+   },
+   "IN": {
+    "continuity": "continuous",
+    "yearsCovered": 21,
+    "monthsCovered": 252,
+    "coveredDec": true,
+    "determination": "Yes",
+    "events": []
+   },
+   "KS": {
+    "continuity": "interrupted",
+    "yearsCovered": 21,
+    "monthsCovered": 246,
+    "coveredDec": true,
+    "determination": "Removed 01/2003; Restored 07/2003",
+    "events": [
+     {
+      "type": "start",
+      "month": 7,
+      "year": 2003,
+      "label": "Coverage began July 2003"
+     }
+    ]
+   },
+   "KY": {
+    "continuity": "never",
+    "yearsCovered": 0,
+    "monthsCovered": 0,
+    "coveredDec": false,
+    "determination": "No",
+    "events": []
+   },
+   "LA": {
+    "continuity": "never",
+    "yearsCovered": 0,
+    "monthsCovered": 0,
+    "coveredDec": false,
+    "determination": "No",
+    "events": []
+   },
+   "MA": {
+    "continuity": "continuous",
+    "yearsCovered": 21,
+    "monthsCovered": 252,
+    "coveredDec": true,
+    "determination": "Yes",
+    "events": []
+   },
+   "MD": {
+    "continuity": "adopted",
+    "yearsCovered": 6,
+    "monthsCovered": 63,
+    "coveredDec": true,
+    "determination": "Instated 10/2018",
+    "events": [
+     {
+      "type": "start",
+      "month": 10,
+      "year": 2018,
+      "label": "Coverage began October 2018"
+     }
+    ]
+   },
+   "ME": {
+    "continuity": "adopted",
+    "yearsCovered": 9,
+    "monthsCovered": 103,
+    "coveredDec": true,
+    "determination": "Instated 06/2015",
+    "events": [
+     {
+      "type": "start",
+      "month": 6,
+      "year": 2015,
+      "label": "Coverage began June 2015"
+     }
+    ]
+   },
+   "MI": {
+    "continuity": "interrupted",
+    "yearsCovered": 12,
+    "monthsCovered": 118,
+    "coveredDec": true,
+    "determination": "Removed 07/2003; Restored 07/2004; Removed 07/2008; Restored 09/2018",
+    "events": [
+     {
+      "type": "end",
+      "month": 7,
+      "year": 2003,
+      "label": "Coverage ended July 2003"
+     },
+     {
+      "type": "start",
+      "month": 7,
+      "year": 2004,
+      "label": "Coverage began July 2004"
+     },
+     {
+      "type": "end",
+      "month": 7,
+      "year": 2008,
+      "label": "Coverage ended July 2008"
+     },
+     {
+      "type": "start",
+      "month": 9,
+      "year": 2018,
+      "label": "Coverage began September 2018"
+     }
+    ]
+   },
+   "MN": {
+    "continuity": "continuous",
+    "yearsCovered": 21,
+    "monthsCovered": 252,
+    "coveredDec": true,
+    "determination": "Yes",
+    "events": []
+   },
+   "MO": {
+    "continuity": "removed",
+    "yearsCovered": 3,
+    "monthsCovered": 30,
+    "coveredDec": false,
+    "determination": "Removed 07/2005",
+    "events": [
+     {
+      "type": "end",
+      "month": 7,
+      "year": 2005,
+      "label": "Coverage ended July 2005"
+     }
+    ]
+   },
+   "MS": {
+    "continuity": "never",
+    "yearsCovered": 0,
+    "monthsCovered": 0,
+    "coveredDec": false,
+    "determination": "No",
+    "events": []
+   },
+   "MT": {
+    "continuity": "continuous",
+    "yearsCovered": 21,
+    "monthsCovered": 252,
+    "coveredDec": true,
+    "determination": "Yes",
+    "events": []
+   },
+   "NC": {
+    "continuity": "never",
+    "yearsCovered": 0,
+    "monthsCovered": 0,
+    "coveredDec": false,
+    "determination": "No",
+    "events": []
+   },
+   "ND": {
+    "continuity": "continuous",
+    "yearsCovered": 21,
+    "monthsCovered": 252,
+    "coveredDec": true,
+    "determination": "Yes",
+    "events": []
+   },
+   "NE": {
+    "continuity": "continuous",
+    "yearsCovered": 21,
+    "monthsCovered": 252,
+    "coveredDec": true,
+    "determination": "Yes",
+    "events": []
+   },
+   "NH": {
+    "continuity": "continuous",
+    "yearsCovered": 21,
+    "monthsCovered": 252,
+    "coveredDec": true,
+    "determination": "Yes",
+    "events": []
+   },
+   "NJ": {
+    "continuity": "continuous",
+    "yearsCovered": 21,
+    "monthsCovered": 252,
+    "coveredDec": true,
+    "determination": "Yes",
+    "events": []
+   },
+   "NM": {
+    "continuity": "continuous",
+    "yearsCovered": 21,
+    "monthsCovered": 252,
+    "coveredDec": true,
+    "determination": "Yes",
+    "events": []
+   },
+   "NV": {
+    "continuity": "continuous",
+    "yearsCovered": 21,
+    "monthsCovered": 252,
+    "coveredDec": true,
+    "determination": "Yes",
+    "events": []
+   },
+   "NY": {
+    "continuity": "continuous",
+    "yearsCovered": 21,
+    "monthsCovered": 252,
+    "coveredDec": true,
+    "determination": "Yes",
+    "events": []
+   },
+   "OH": {
+    "continuity": "continuous",
+    "yearsCovered": 21,
+    "monthsCovered": 252,
+    "coveredDec": true,
+    "determination": "Yes",
+    "events": []
+   },
+   "OK": {
+    "continuity": "never",
+    "yearsCovered": 0,
+    "monthsCovered": 0,
+    "coveredDec": false,
+    "determination": "No",
+    "events": []
+   },
+   "OR": {
+    "continuity": "continuous",
+    "yearsCovered": 21,
+    "monthsCovered": 252,
+    "coveredDec": true,
+    "determination": "Yes",
+    "events": []
+   },
+   "PA": {
+    "continuity": "never",
+    "yearsCovered": 0,
+    "monthsCovered": 0,
+    "coveredDec": false,
+    "determination": "No",
+    "events": []
+   },
+   "RI": {
+    "continuity": "continuous",
+    "yearsCovered": 21,
+    "monthsCovered": 252,
+    "coveredDec": true,
+    "determination": "Yes",
+    "events": []
+   },
+   "SC": {
+    "continuity": "removed",
+    "yearsCovered": 2,
+    "monthsCovered": 24,
+    "coveredDec": false,
+    "determination": "Removed 2005",
+    "events": [
+     {
+      "type": "end",
+      "month": 1,
+      "year": 2005,
+      "label": "Coverage ended January 2005"
+     }
+    ]
+   },
+   "SD": {
+    "continuity": "continuous",
+    "yearsCovered": 21,
+    "monthsCovered": 252,
+    "coveredDec": true,
+    "determination": "Yes",
+    "events": []
+   },
+   "TN": {
+    "continuity": "never",
+    "yearsCovered": 0,
+    "monthsCovered": 0,
+    "coveredDec": false,
+    "determination": "No",
+    "events": []
+   },
+   "TX": {
+    "continuity": "interrupted",
+    "yearsCovered": 20,
+    "monthsCovered": 228,
+    "coveredDec": true,
+    "determination": "Removed 10/2003; Restored in 10/2005",
+    "events": [
+     {
+      "type": "end",
+      "month": 10,
+      "year": 2003,
+      "label": "Coverage ended October 2003"
+     },
+     {
+      "type": "start",
+      "month": 10,
+      "year": 2005,
+      "label": "Coverage began October 2005"
+     }
+    ]
+   },
+   "UT": {
+    "continuity": "removed",
+    "yearsCovered": 6,
+    "monthsCovered": 70,
+    "coveredDec": false,
+    "determination": "Removed 11/2008",
+    "events": [
+     {
+      "type": "end",
+      "month": 11,
+      "year": 2008,
+      "label": "Coverage ended November 2008"
+     }
+    ]
+   },
+   "VA": {
+    "continuity": "never",
+    "yearsCovered": 0,
+    "monthsCovered": 0,
+    "coveredDec": false,
+    "determination": "No",
+    "events": []
+   },
+   "VT": {
+    "continuity": "continuous",
+    "yearsCovered": 21,
+    "monthsCovered": 252,
+    "coveredDec": true,
+    "determination": "Yes",
+    "events": []
+   },
+   "WA": {
+    "continuity": "interrupted",
+    "yearsCovered": 13,
+    "monthsCovered": 156,
+    "coveredDec": true,
+    "determination": "Removed 01/2011; Restored 01/2019",
+    "events": [
+     {
+      "type": "end",
+      "month": 1,
+      "year": 2011,
+      "label": "Coverage ended January 2011"
+     },
+     {
+      "type": "start",
+      "month": 1,
+      "year": 2019,
+      "label": "Coverage began January 2019"
+     }
+    ]
+   },
+   "WI": {
+    "continuity": "continuous",
+    "yearsCovered": 21,
+    "monthsCovered": 252,
+    "coveredDec": true,
+    "determination": "Yes",
+    "events": []
+   },
+   "WV": {
+    "continuity": "never",
+    "yearsCovered": 0,
+    "monthsCovered": 0,
+    "coveredDec": false,
+    "determination": "No",
+    "events": []
+   },
+   "WY": {
+    "continuity": "continuous",
+    "yearsCovered": 21,
+    "monthsCovered": 252,
+    "coveredDec": true,
+    "determination": "Yes",
+    "events": []
+   }
+  },
+  "countsByYear": [
+   {
+    "year": 2003,
+    "states": 32
+   },
+   {
+    "year": 2004,
+    "states": 31
+   },
+   {
+    "year": 2005,
+    "states": 31
+   },
+   {
+    "year": 2006,
+    "states": 31
+   },
+   {
+    "year": 2007,
+    "states": 31
+   },
+   {
+    "year": 2008,
+    "states": 31
+   },
+   {
+    "year": 2009,
+    "states": 29
+   },
+   {
+    "year": 2010,
+    "states": 29
+   },
+   {
+    "year": 2011,
+    "states": 28
+   },
+   {
+    "year": 2012,
+    "states": 27
+   },
+   {
+    "year": 2013,
+    "states": 27
+   },
+   {
+    "year": 2014,
+    "states": 27
+   },
+   {
+    "year": 2015,
+    "states": 28
+   },
+   {
+    "year": 2016,
+    "states": 28
+   },
+   {
+    "year": 2017,
+    "states": 28
+   },
+   {
+    "year": 2018,
+    "states": 30
+   },
+   {
+    "year": 2019,
+    "states": 31
+   },
+   {
+    "year": 2020,
+    "states": 31
+   },
+   {
+    "year": 2021,
+    "states": 31
+   },
+   {
+    "year": 2022,
+    "states": 31
+   },
+   {
+    "year": 2023,
+    "states": 31
+   }
+  ],
+  "continuityCounts": {
+   "continuous": 24,
+   "never": 16,
+   "adopted": 3,
+   "removed": 4,
+   "interrupted": 4
+  }
+ },
+ "medicaid2023": {
+  "asOf": "December 2023",
+  "states": {
+   "AK": {
+    "eligibility": "At Provider's Discretion",
+    "frequency": "36",
+    "costSharing": "Allowed",
+    "reimbursement": "FFS",
+    "provider": "Audiologist or HIS/Other",
+    "aids": "No Restrictions",
+    "fittings": "Yes",
+    "adjustments": "Yes",
+    "supplies": "Yes",
+    "batteries": "Yes",
+    "assessments": "Yes",
+    "auditoryTraining": "NS",
+    "status": "covered"
+   },
+   "CA": {
+    "eligibility": "Any HL",
+    "frequency": "12",
+    "costSharing": "Allowed",
+    "reimbursement": "FFS + MC",
+    "provider": "Audiologist or HIS/Other",
+    "aids": "No Restrictions",
+    "fittings": "Yes",
+    "adjustments": "Yes",
+    "supplies": "Yes",
+    "batteries": "No",
+    "assessments": "Yes",
+    "auditoryTraining": "NS",
+    "status": "covered"
+   },
+   "CT": {
+    "eligibility": "At Provider's Discretion",
+    "frequency": "NS",
+    "costSharing": "Prohibited",
+    "reimbursement": "FFS",
+    "provider": "Audiologist or HIS/Other",
+    "aids": "No Restrictions",
+    "fittings": "Yes",
+    "adjustments": "Yes",
+    "supplies": "Yes",
+    "batteries": "NS",
+    "assessments": "NS",
+    "auditoryTraining": "NS",
+    "status": "covered"
+   },
+   "FL": {
+    "eligibility": "Mild HL or Greater",
+    "frequency": "36",
+    "costSharing": "NS",
+    "reimbursement": "FFS + MC",
+    "provider": "Audiologist or HIS/Other",
+    "aids": "No Restrictions",
+    "fittings": "Yes",
+    "adjustments": "NS",
+    "supplies": "Yes",
+    "batteries": "No",
+    "assessments": "Yes",
+    "auditoryTraining": "NS",
+    "status": "covered"
+   },
+   "HI": {
+    "eligibility": "At Provider's Discretion",
+    "frequency": "24",
+    "costSharing": "Prohibited",
+    "reimbursement": "FFS + MC",
+    "provider": "Audiologist Only",
+    "aids": "Monaural Only",
+    "fittings": "Yes",
+    "adjustments": "Yes",
+    "supplies": "Yes",
+    "batteries": "NS",
+    "assessments": "Yes",
+    "auditoryTraining": "Yes",
+    "status": "covered"
+   },
+   "IA": {
+    "eligibility": "At Provider's Discretion",
+    "frequency": "48",
+    "costSharing": "Allowed",
+    "reimbursement": "FFS + MC",
+    "provider": "Audiologist or HIS/Other",
+    "aids": "Monaural and/or Binaural with Prior Authorization/Justification",
+    "fittings": "Yes",
+    "adjustments": "Yes",
+    "supplies": "Yes",
+    "batteries": "Yes",
+    "assessments": "NS",
+    "auditoryTraining": "NS",
+    "status": "covered"
+   },
+   "IL": {
+    "eligibility": "Any HL",
+    "frequency": "36",
+    "costSharing": "Prohibited",
+    "reimbursement": "FFS + MC",
+    "provider": "Audiologist or HIS/Other",
+    "aids": "Monaural and/or Binaural with Prior Authorization/Justification",
+    "fittings": "Yes",
+    "adjustments": "Yes",
+    "supplies": "Yes",
+    "batteries": "Yes",
+    "assessments": "Yes",
+    "auditoryTraining": "NS",
+    "status": "covered"
+   },
+   "IN": {
+    "eligibility": "Any HL",
+    "frequency": "60",
+    "costSharing": "Allowed",
+    "reimbursement": "FFS + MC",
+    "provider": "Audiologist or HIS/Other",
+    "aids": "Monaural Only",
+    "fittings": "Yes",
+    "adjustments": "Yes",
+    "supplies": "Yes",
+    "batteries": "Yes",
+    "assessments": "Yes",
+    "auditoryTraining": "NS",
+    "status": "covered"
+   },
+   "KS": {
+    "eligibility": "At Provider's Discretion",
+    "frequency": "48",
+    "costSharing": "NS",
+    "reimbursement": "FFS + MC",
+    "provider": "Audiologist or HIS/Other",
+    "aids": "Monaural and/or Binaural with Prior Authorization/Justification",
+    "fittings": "Yes",
+    "adjustments": "Yes",
+    "supplies": "No",
+    "batteries": "Yes",
+    "assessments": "NS",
+    "auditoryTraining": "NS",
+    "status": "covered"
+   },
+   "MA": {
+    "eligibility": "At Provider's Discretion",
+    "frequency": "60",
+    "costSharing": "Allowed",
+    "reimbursement": "FFS + MC",
+    "provider": "Audiologist or HIS/Other",
+    "aids": "Binaural without Preauthorization/Justification",
+    "fittings": "Yes",
+    "adjustments": "Yes",
+    "supplies": "Yes",
+    "batteries": "Yes",
+    "assessments": "Yes",
+    "auditoryTraining": "Yes",
+    "status": "covered"
+   },
+   "MD": {
+    "eligibility": "At Provider's Discretion",
+    "frequency": "60",
+    "costSharing": "Allowed",
+    "reimbursement": "FFS + MC",
+    "provider": "Audiologist or HIS/Other",
+    "aids": "Binaural without Preauthorization/Justification",
+    "fittings": "Yes",
+    "adjustments": "Yes",
+    "supplies": "Yes",
+    "batteries": "Yes",
+    "assessments": "Yes",
+    "auditoryTraining": "NS",
+    "status": "covered"
+   },
+   "ME": {
+    "eligibility": "Mild HL or Greater",
+    "frequency": "60",
+    "costSharing": "Allowed",
+    "reimbursement": "FFS",
+    "provider": "Audiologist or HIS/Other",
+    "aids": "Monaural and/or Binaural with Prior Authorization/Justification",
+    "fittings": "No",
+    "adjustments": "No",
+    "supplies": "Yes",
+    "batteries": "Yes",
+    "assessments": "No",
+    "auditoryTraining": "No",
+    "status": "covered"
+   },
+   "MI": {
+    "eligibility": "Any HL",
+    "frequency": "60",
+    "costSharing": "Allowed",
+    "reimbursement": "FFS + MC",
+    "provider": "Audiologist or HIS/Other",
+    "aids": "Binaural without Preauthorization/Justification",
+    "fittings": "Yes",
+    "adjustments": "Yes",
+    "supplies": "Yes",
+    "batteries": "Yes",
+    "assessments": "Yes",
+    "auditoryTraining": "Yes",
+    "status": "covered"
+   },
+   "MN": {
+    "eligibility": "At Provider's Discretion",
+    "frequency": "60",
+    "costSharing": "Allowed",
+    "reimbursement": "FFS + MC",
+    "provider": "Audiologist or HIS/Other",
+    "aids": "Monaural Only",
+    "fittings": "Yes",
+    "adjustments": "NS",
+    "supplies": "No",
+    "batteries": "Yes",
+    "assessments": "NS",
+    "auditoryTraining": "NS",
+    "status": "covered"
+   },
+   "MO": {
+    "eligibility": "Any HL",
+    "frequency": "48",
+    "costSharing": "NS",
+    "reimbursement": "FFS + MC",
+    "provider": "Audiologist or HIS/Other",
+    "aids": "Monaural and/or Binaural with Prior Authorization/Justification",
+    "fittings": "Yes",
+    "adjustments": "Yes",
+    "supplies": "Yes",
+    "batteries": "No",
+    "assessments": "Yes",
+    "auditoryTraining": "NS",
+    "status": "special"
+   },
+   "MT": {
+    "eligibility": "Mild HL or Greater",
+    "frequency": "60",
+    "costSharing": "Prohibited",
+    "reimbursement": "FFS",
+    "provider": "Audiologist Only",
+    "aids": "Binaural without Preauthorization/Justification",
+    "fittings": "Yes",
+    "adjustments": "Yes",
+    "supplies": "Yes",
+    "batteries": "Yes",
+    "assessments": "Yes",
+    "auditoryTraining": "NS",
+    "status": "covered"
+   },
+   "ND": {
+    "eligibility": "Mild HL or Greater",
+    "frequency": "60",
+    "costSharing": "Prohibited",
+    "reimbursement": "FFS + MC",
+    "provider": "Audiologist or HIS/Other",
+    "aids": "Monaural Only",
+    "fittings": "Yes",
+    "adjustments": "Yes",
+    "supplies": "Yes",
+    "batteries": "Yes",
+    "assessments": "NS",
+    "auditoryTraining": "NS",
+    "status": "covered"
+   },
+   "NE": {
+    "eligibility": "At Provider's Discretion",
+    "frequency": "48",
+    "costSharing": "NS",
+    "reimbursement": "FFS + MC",
+    "provider": "Audiologist or HIS/Other",
+    "aids": "Binaural without Preauthorization/Justification",
+    "fittings": "NS",
+    "adjustments": "NS",
+    "supplies": "Yes",
+    "batteries": "No",
+    "assessments": "NS",
+    "auditoryTraining": "NS",
+    "status": "covered"
+   },
+   "NH": {
+    "eligibility": "Mild HL or Greater",
+    "frequency": "24",
+    "costSharing": "Allowed",
+    "reimbursement": "FFS + MC",
+    "provider": "Audiologist or HIS/Other",
+    "aids": "Monaural and/or Binaural with Prior Authorization/Justification",
+    "fittings": "Yes",
+    "adjustments": "Yes",
+    "supplies": "Yes",
+    "batteries": "Yes",
+    "assessments": "Yes",
+    "auditoryTraining": "NS",
+    "status": "covered"
+   },
+   "NJ": {
+    "eligibility": "Mild HL or Greater",
+    "frequency": "12",
+    "costSharing": "Prohibited",
+    "reimbursement": "FFS + MC",
+    "provider": "Audiologist or HIS/Other",
+    "aids": "No Restrictions",
+    "fittings": "Yes",
+    "adjustments": "Yes",
+    "supplies": "Yes",
+    "batteries": "Yes",
+    "assessments": "Yes",
+    "auditoryTraining": "NS",
+    "status": "covered"
+   },
+   "NM": {
+    "eligibility": "At Provider's Discretion",
+    "frequency": "48",
+    "costSharing": "Prohibited",
+    "reimbursement": "FFS + MC",
+    "provider": "Audiologist or HIS/Other",
+    "aids": "Monaural and/or Binaural with Prior Authorization/Justification",
+    "fittings": "Yes",
+    "adjustments": "Yes",
+    "supplies": "Yes",
+    "batteries": "Yes",
+    "assessments": "Yes",
+    "auditoryTraining": "NS",
+    "status": "covered"
+   },
+   "NY": {
+    "eligibility": "Any HL",
+    "frequency": "60",
+    "costSharing": "Allowed",
+    "reimbursement": "FFS + MC",
+    "provider": "Audiologist or HIS/Other",
+    "aids": "Monaural and/or Binaural with Prior Authorization/Justification",
+    "fittings": "Yes",
+    "adjustments": "Yes",
+    "supplies": "Yes",
+    "batteries": "Yes",
+    "assessments": "Yes",
+    "auditoryTraining": "NS",
+    "status": "covered"
+   },
+   "OH": {
+    "eligibility": "Any HL",
+    "frequency": "NS",
+    "costSharing": "NS",
+    "reimbursement": "FFS + MC",
+    "provider": "Audiologist or HIS/Other",
+    "aids": "Binaural without Preauthorization/Justification",
+    "fittings": "Yes",
+    "adjustments": "Yes",
+    "supplies": "Yes",
+    "batteries": "Yes",
+    "assessments": "Yes",
+    "auditoryTraining": "Yes",
+    "status": "covered"
+   },
+   "OR": {
+    "eligibility": "Mild HL or Greater",
+    "frequency": "60",
+    "costSharing": "Prohibited",
+    "reimbursement": "FFS + MC",
+    "provider": "Audiologist or HIS/Other",
+    "aids": "No Restrictions",
+    "fittings": "Yes",
+    "adjustments": "Yes",
+    "supplies": "Yes",
+    "batteries": "Yes",
+    "assessments": "Yes",
+    "auditoryTraining": "NS",
+    "status": "covered"
+   },
+   "RI": {
+    "eligibility": "At Provider's Discretion",
+    "frequency": "60",
+    "costSharing": "Prohibited",
+    "reimbursement": "FFS + MC",
+    "provider": "Audiologist or HIS/Other",
+    "aids": "Monaural and/or Binaural with Prior Authorization/Justification",
+    "fittings": "NS",
+    "adjustments": "NS",
+    "supplies": "Yes",
+    "batteries": "NS",
+    "assessments": "NS",
+    "auditoryTraining": "NS",
+    "status": "covered"
+   },
+   "SD": {
+    "eligibility": "Any HL",
+    "frequency": "36",
+    "costSharing": "NS",
+    "reimbursement": "FFS",
+    "provider": "Audiologist or HIS/Other",
+    "aids": "No Restrictions",
+    "fittings": "Yes",
+    "adjustments": "Yes",
+    "supplies": "Yes",
+    "batteries": "Yes",
+    "assessments": "Yes",
+    "auditoryTraining": "NS",
+    "status": "covered"
+   },
+   "TX": {
+    "eligibility": "Any HL",
+    "frequency": "60",
+    "costSharing": "NS",
+    "reimbursement": "FFS + MC",
+    "provider": "Audiologist or HIS/Other",
+    "aids": "Monaural Only",
+    "fittings": "Yes",
+    "adjustments": "Yes",
+    "supplies": "Yes",
+    "batteries": "Yes",
+    "assessments": "Yes",
+    "auditoryTraining": "NS",
+    "status": "covered"
+   },
+   "UT": {
+    "eligibility": "At Provider's Discretion",
+    "frequency": "60",
+    "costSharing": "Allowed",
+    "reimbursement": "FFS + MC",
+    "provider": "Audiologist Only",
+    "aids": "Monaural and/or Binaural with Prior Authorization/Justification",
+    "fittings": "Yes",
+    "adjustments": "Yes",
+    "supplies": "Yes",
+    "batteries": "Yes",
+    "assessments": "Yes",
+    "auditoryTraining": "Yes",
+    "status": "special"
+   },
+   "VT": {
+    "eligibility": "Any HL",
+    "frequency": "36",
+    "costSharing": "Allowed",
+    "reimbursement": "FFS",
+    "provider": "Audiologist or HIS/Other",
+    "aids": "Binaural without Preauthorization/Justification",
+    "fittings": "Yes",
+    "adjustments": "Yes",
+    "supplies": "Yes",
+    "batteries": "Yes",
+    "assessments": "Yes",
+    "auditoryTraining": "NS",
+    "status": "covered"
+   },
+   "WA": {
+    "eligibility": "Mild HL or Greater",
+    "frequency": "60",
+    "costSharing": "Prohibited",
+    "reimbursement": "FFS + MC",
+    "provider": "Audiologist or HIS/Other",
+    "aids": "No Restrictions",
+    "fittings": "Yes",
+    "adjustments": "Yes",
+    "supplies": "Yes",
+    "batteries": "Yes",
+    "assessments": "NS",
+    "auditoryTraining": "NS",
+    "status": "covered"
+   },
+   "WI": {
+    "eligibility": "At Provider's Discretion",
+    "frequency": "36",
+    "costSharing": "NS",
+    "reimbursement": "FFS + MC",
+    "provider": "Audiologist or HIS/Other",
+    "aids": "Monaural and/or Binaural with Prior Authorization/Justification",
+    "fittings": "Yes",
+    "adjustments": "Yes",
+    "supplies": "Yes",
+    "batteries": "Yes",
+    "assessments": "Yes",
+    "auditoryTraining": "Yes",
+    "status": "covered"
+   },
+   "WY": {
+    "eligibility": "Any HL",
+    "frequency": "60",
+    "costSharing": "NS",
+    "reimbursement": "FFS",
+    "provider": "Audiologist or HIS/Other",
+    "aids": "Monaural and/or Binaural with Prior Authorization/Justification",
+    "fittings": "NS",
+    "adjustments": "NS",
+    "supplies": "Yes",
+    "batteries": "NS",
+    "assessments": "NS",
+    "auditoryTraining": "NS",
+    "status": "covered"
+   }
+  },
+  "status": {
+   "AL": "none",
+   "AK": "covered",
+   "AZ": "none",
+   "AR": "none",
+   "CA": "covered",
+   "CO": "none",
+   "CT": "covered",
+   "DE": "none",
+   "DC": "none",
+   "FL": "covered",
+   "GA": "none",
+   "HI": "covered",
+   "ID": "none",
+   "IL": "covered",
+   "IN": "covered",
+   "IA": "covered",
+   "KS": "covered",
+   "KY": "none",
+   "LA": "none",
+   "ME": "covered",
+   "MD": "covered",
+   "MA": "covered",
+   "MI": "covered",
+   "MN": "covered",
+   "MS": "none",
+   "MO": "special",
+   "MT": "covered",
+   "NE": "covered",
+   "NV": "covered",
+   "NH": "covered",
+   "NJ": "covered",
+   "NM": "covered",
+   "NY": "covered",
+   "NC": "none",
+   "ND": "covered",
+   "OH": "covered",
+   "OK": "none",
+   "OR": "covered",
+   "PA": "none",
+   "RI": "covered",
+   "SC": "none",
+   "SD": "covered",
+   "TN": "none",
+   "TX": "covered",
+   "UT": "special",
+   "VT": "covered",
+   "VA": "none",
+   "WA": "covered",
+   "WV": "none",
+   "WI": "covered",
+   "WY": "covered"
+  },
+  "statusCounts": {
+   "none": 18,
+   "covered": 31,
+   "special": 2
+  },
+  "covering": 32,
+  "features": [
+   {
+    "key": "supplies",
+    "label": "Supplies covered",
+    "yes": 30,
+    "no": 2,
+    "notStated": 0,
+    "of": 32
+   },
+   {
+    "key": "fittings",
+    "label": "Fittings covered",
+    "yes": 28,
+    "no": 1,
+    "notStated": 3,
+    "of": 32
+   },
+   {
+    "key": "adjustments",
+    "label": "Follow-up adjustments covered",
+    "yes": 26,
+    "no": 1,
+    "notStated": 5,
+    "of": 32
+   },
+   {
+    "key": "batteries",
+    "label": "Batteries covered",
+    "yes": 24,
+    "no": 4,
+    "notStated": 4,
+    "of": 32
+   },
+   {
+    "key": "assessments",
+    "label": "Rehabilitation assessments covered",
+    "yes": 22,
+    "no": 1,
+    "notStated": 9,
+    "of": 32
+   },
+   {
+    "key": "auditoryTraining",
+    "label": "Auditory training covered",
+    "yes": 6,
+    "no": 1,
+    "notStated": 25,
+    "of": 32
+   }
+  ],
+  "eligibility": {
+   "At Provider's Discretion": 13,
+   "Any HL": 11,
+   "Mild HL or Greater": 8
+  },
+  "frequency": {
+   "36": 6,
+   "12": 2,
+   "NS": 2,
+   "24": 2,
+   "48": 5,
+   "60": 15
+  },
+  "costSharing": {
+   "Allowed": 13,
+   "Prohibited": 10,
+   "NS": 9
+  },
+  "aids": {
+   "No Restrictions": 8,
+   "Monaural Only": 5,
+   "Monaural and/or Binaural with Prior Authorization/Justification": 12,
+   "Binaural without Preauthorization/Justification": 7
+  },
+  "provider": {
+   "Audiologist or HIS/Other": 29,
+   "Audiologist Only": 3
+  },
+  "notInBenefitFile": [
+   "NV"
+  ],
+  "coveringTotal": 33
+ },
+ "privateMandates": {
+  "years": [
+   1997,
+   2023
+  ],
+  "countsByYear": [
+   {
+    "year": 1997,
+    "states": 0
+   },
+   {
+    "year": 1998,
+    "states": 0
+   },
+   {
+    "year": 1999,
+    "states": 0
+   },
+   {
+    "year": 2000,
+    "states": 0
+   },
+   {
+    "year": 2001,
+    "states": 1
+   },
+   {
+    "year": 2002,
+    "states": 2
+   },
+   {
+    "year": 2003,
+    "states": 2
+   },
+   {
+    "year": 2004,
+    "states": 3
+   },
+   {
+    "year": 2005,
+    "states": 3
+   },
+   {
+    "year": 2006,
+    "states": 4
+   },
+   {
+    "year": 2007,
+    "states": 7
+   },
+   {
+    "year": 2008,
+    "states": 8
+   },
+   {
+    "year": 2009,
+    "states": 10
+   },
+   {
+    "year": 2010,
+    "states": 14
+   },
+   {
+    "year": 2011,
+    "states": 16
+   },
+   {
+    "year": 2012,
+    "states": 19
+   },
+   {
+    "year": 2013,
+    "states": 19
+   },
+   {
+    "year": 2014,
+    "states": 19
+   },
+   {
+    "year": 2015,
+    "states": 19
+   },
+   {
+    "year": 2016,
+    "states": 19
+   },
+   {
+    "year": 2017,
+    "states": 20
+   },
+   {
+    "year": 2018,
+    "states": 22
+   },
+   {
+    "year": 2019,
+    "states": 23
+   },
+   {
+    "year": 2020,
+    "states": 24
+   },
+   {
+    "year": 2021,
+    "states": 25
+   },
+   {
+    "year": 2022,
+    "states": 26
+   },
+   {
+    "year": 2023,
+    "states": 26
+   }
+  ],
+  "states": {
+   "AL": {
+    "status": "none"
+   },
+   "AK": {
+    "status": "none"
+   },
+   "AZ": {
+    "status": "none"
+   },
+   "AR": {
+    "status": "allAges",
+    "since": "January 2010",
+    "ageMax": "No maximum age",
+    "stateEmployeesOnly": false,
+    "exceptions": [],
+    "allowance": "2 hearing aids",
+    "dollarLimit": "2800",
+    "frequency": "Not stated"
+   },
+   "CA": {
+    "status": "none"
+   },
+   "CO": {
+    "status": "limited",
+    "since": "August 2009",
+    "ageMax": "Through age 18",
+    "stateEmployeesOnly": false,
+    "exceptions": [],
+    "allowance": "Not stated",
+    "dollarLimit": "Not stated",
+    "frequency": "60"
+   },
+   "CT": {
+    "status": "allAges",
+    "since": "June 2012",
+    "ageMax": "No maximum age",
+    "stateEmployeesOnly": false,
+    "exceptions": [],
+    "allowance": "1 hearing aid",
+    "dollarLimit": "Not stated",
+    "frequency": "24"
+   },
+   "DE": {
+    "status": "limited",
+    "since": "June 2008",
+    "ageMax": "Through age 24",
+    "stateEmployeesOnly": false,
+    "exceptions": [],
+    "allowance": "2 hearing aids",
+    "dollarLimit": "2000",
+    "frequency": "36"
+   },
+   "DC": {
+    "status": "none"
+   },
+   "FL": {
+    "status": "none"
+   },
+   "GA": {
+    "status": "limited",
+    "since": "January 2018",
+    "ageMax": "Through age 18",
+    "stateEmployeesOnly": false,
+    "exceptions": [
+     "Small employer plans are exempt",
+     "Plans are exempt if benefit costs exceed 1% of annual premiums"
+    ],
+    "allowance": "2 hearing aids",
+    "dollarLimit": "6000",
+    "frequency": "48"
+   },
+   "HI": {
+    "status": "none"
+   },
+   "ID": {
+    "status": "none"
+   },
+   "IL": {
+    "status": "allAges",
+    "since": "August 2018",
+    "ageMax": "No maximum age",
+    "stateEmployeesOnly": false,
+    "exceptions": [
+     "Small employer plans are exempt",
+     "Plans are exempt if benefit costs exceed 1% of annual premiums",
+     "Coverage offered as an optional rider"
+    ],
+    "allowance": "2 hearing aids",
+    "dollarLimit": "5000",
+    "frequency": "24"
+   },
+   "IN": {
+    "status": "none"
+   },
+   "IA": {
+    "status": "none"
+   },
+   "KS": {
+    "status": "none"
+   },
+   "KY": {
+    "status": "limited",
+    "since": "July 2002",
+    "ageMax": "Through age 18",
+    "stateEmployeesOnly": false,
+    "exceptions": [],
+    "allowance": "2 hearing aids",
+    "dollarLimit": "2800",
+    "frequency": "36"
+   },
+   "LA": {
+    "status": "limited",
+    "since": "January 2004",
+    "ageMax": "Through age 18",
+    "stateEmployeesOnly": false,
+    "exceptions": [],
+    "allowance": "2 hearing aids",
+    "dollarLimit": "2800",
+    "frequency": "36"
+   },
+   "ME": {
+    "status": "allAges",
+    "since": "September 2007",
+    "ageMax": "No maximum age",
+    "stateEmployeesOnly": false,
+    "exceptions": [],
+    "allowance": "2 hearing aids",
+    "dollarLimit": "6000",
+    "frequency": "36"
+   },
+   "MD": {
+    "status": "limited",
+    "since": "October 2001",
+    "ageMax": "Through age 18",
+    "stateEmployeesOnly": false,
+    "exceptions": [],
+    "allowance": "2 hearing aids",
+    "dollarLimit": "2800",
+    "frequency": "36"
+   },
+   "MA": {
+    "status": "limited",
+    "since": "November 2012",
+    "ageMax": "Through age 21",
+    "stateEmployeesOnly": false,
+    "exceptions": [],
+    "allowance": "2 hearing aids",
+    "dollarLimit": "4000",
+    "frequency": "36"
+   },
+   "MI": {
+    "status": "none"
+   },
+   "MN": {
+    "status": "limited",
+    "since": "August 2007",
+    "ageMax": "Through age 18",
+    "stateEmployeesOnly": false,
+    "exceptions": [],
+    "allowance": "2 hearing aids",
+    "dollarLimit": "Not stated",
+    "frequency": "36"
+   },
+   "MS": {
+    "status": "none"
+   },
+   "MO": {
+    "status": "limited",
+    "since": "August 2021",
+    "ageMax": "Through age 18",
+    "stateEmployeesOnly": false,
+    "exceptions": [],
+    "allowance": "Not stated",
+    "dollarLimit": "Not stated",
+    "frequency": "48"
+   },
+   "MT": {
+    "status": "limited",
+    "since": "January 2022",
+    "ageMax": "Through age 18",
+    "stateEmployeesOnly": false,
+    "exceptions": [],
+    "allowance": "2 hearing aids",
+    "dollarLimit": "Not stated",
+    "frequency": "36"
+   },
+   "NE": {
+    "status": "limited",
+    "since": "January 2020",
+    "ageMax": "Through age 18",
+    "stateEmployeesOnly": false,
+    "exceptions": [
+     "Plans are exempt if benefit costs exceed 1% of annual premiums"
+    ],
+    "allowance": "2 hearing aids",
+    "dollarLimit": "6000",
+    "frequency": "48"
+   },
+   "NV": {
+    "status": "none"
+   },
+   "NH": {
+    "status": "allAges",
+    "since": "January 2011",
+    "ageMax": "No maximum age",
+    "stateEmployeesOnly": false,
+    "exceptions": [],
+    "allowance": "2 hearing aids",
+    "dollarLimit": "3000",
+    "frequency": "60"
+   },
+   "NJ": {
+    "status": "limited",
+    "since": "March 2009",
+    "ageMax": "Through age 15",
+    "stateEmployeesOnly": false,
+    "exceptions": [],
+    "allowance": "2 hearing aids",
+    "dollarLimit": "2000",
+    "frequency": "24"
+   },
+   "NM": {
+    "status": "limited",
+    "since": "July 2007",
+    "ageMax": "Through age 21",
+    "stateEmployeesOnly": false,
+    "exceptions": [],
+    "allowance": "2 hearing aids",
+    "dollarLimit": "4400",
+    "frequency": "36"
+   },
+   "NY": {
+    "status": "none"
+   },
+   "NC": {
+    "status": "limited",
+    "since": "January 2011",
+    "ageMax": "Through age 22",
+    "stateEmployeesOnly": false,
+    "exceptions": [],
+    "allowance": "2 hearing aids",
+    "dollarLimit": "5000",
+    "frequency": "36"
+   },
+   "ND": {
+    "status": "none"
+   },
+   "OH": {
+    "status": "none"
+   },
+   "OK": {
+    "status": "limited",
+    "since": "November 2010",
+    "ageMax": "Through age 18",
+    "stateEmployeesOnly": false,
+    "exceptions": [],
+    "allowance": "Not stated",
+    "dollarLimit": "Not stated",
+    "frequency": "48"
+   },
+   "OR": {
+    "status": "limited",
+    "since": "January 2010",
+    "ageMax": "Through age 25",
+    "stateEmployeesOnly": false,
+    "exceptions": [],
+    "allowance": "2 hearing aids",
+    "dollarLimit": "Not stated",
+    "frequency": "36"
+   },
+   "PA": {
+    "status": "none"
+   },
+   "RI": {
+    "status": "allAges",
+    "since": "January 2006",
+    "ageMax": "No maximum age",
+    "stateEmployeesOnly": false,
+    "exceptions": [
+     "Small employer plans are exempt",
+     "Coverage offered as an optional rider"
+    ],
+    "allowance": "2 hearing aids",
+    "dollarLimit": "1400",
+    "frequency": "36"
+   },
+   "SC": {
+    "status": "none"
+   },
+   "SD": {
+    "status": "none"
+   },
+   "TN": {
+    "status": "limited",
+    "since": "January 2012",
+    "ageMax": "Through age 18",
+    "stateEmployeesOnly": false,
+    "exceptions": [],
+    "allowance": "2 hearing aids",
+    "dollarLimit": "2000",
+    "frequency": "36"
+   },
+   "TX": {
+    "status": "limited",
+    "since": "September 2017",
+    "ageMax": "Through age 18",
+    "stateEmployeesOnly": false,
+    "exceptions": [],
+    "allowance": "2 hearing aids",
+    "dollarLimit": "Not stated",
+    "frequency": "36"
+   },
+   "UT": {
+    "status": "none"
+   },
+   "VT": {
+    "status": "none"
+   },
+   "VA": {
+    "status": "none"
+   },
+   "WA": {
+    "status": "limited",
+    "since": "January 2019",
+    "ageMax": "No maximum age",
+    "stateEmployeesOnly": true,
+    "exceptions": [
+     "Mandate covers state employees and their dependents"
+    ],
+    "allowance": "1 hearing aid",
+    "dollarLimit": "Not stated",
+    "frequency": "60"
+   },
+   "WV": {
+    "status": "none"
+   },
+   "WI": {
+    "status": "limited",
+    "since": "January 2010",
+    "ageMax": "Through age 18",
+    "stateEmployeesOnly": true,
+    "exceptions": [
+     "Mandate covers state employees and their dependents"
+    ],
+    "allowance": "2 hearing aids",
+    "dollarLimit": "Not stated",
+    "frequency": "36"
+   },
+   "WY": {
+    "status": "none"
+   }
+  },
+  "statusCounts": {
+   "none": 25,
+   "allAges": 6,
+   "limited": 20
+  }
+ },
+ "workforce": {
+  "audiologists": {
+   "national": [
+    {
+     "year": 2012,
+     "n": 14525
+    },
+    {
+     "year": 2013,
+     "n": 15261
+    },
+    {
+     "year": 2014,
+     "n": 15953
+    },
+    {
+     "year": 2015,
+     "n": 16653
+    },
+    {
+     "year": 2016,
+     "n": 17373
+    },
+    {
+     "year": 2017,
+     "n": 18148
+    },
+    {
+     "year": 2018,
+     "n": 19107
+    },
+    {
+     "year": 2019,
+     "n": 19943
+    },
+    {
+     "year": 2020,
+     "n": 20676
+    },
+    {
+     "year": 2021,
+     "n": 21465
+    },
+    {
+     "year": 2022,
+     "n": 22226
+    }
+   ],
+   "states": {
+    "AL": {
+     "first": 227,
+     "last": 329
+    },
+    "AK": {
+     "first": 37,
+     "last": 56
+    },
+    "AZ": {
+     "first": 309,
+     "last": 501
+    },
+    "AR": {
+     "first": 135,
+     "last": 194
+    },
+    "CA": {
+     "first": 1208,
+     "last": 1777
+    },
+    "CO": {
+     "first": 389,
+     "last": 652
+    },
+    "CT": {
+     "first": 185,
+     "last": 269
+    },
+    "DE": {
+     "first": 39,
+     "last": 59
+    },
+    "DC": {
+     "first": 79,
+     "last": 124
+    },
+    "FL": {
+     "first": 858,
+     "last": 1396
+    },
+    "GA": {
+     "first": 313,
+     "last": 516
+    },
+    "HI": {
+     "first": 53,
+     "last": 77
+    },
+    "ID": {
+     "first": 75,
+     "last": 126
+    },
+    "IL": {
+     "first": 634,
+     "last": 875
+    },
+    "IN": {
+     "first": 305,
+     "last": 458
+    },
+    "IA": {
+     "first": 158,
+     "last": 237
+    },
+    "KS": {
+     "first": 155,
+     "last": 214
+    },
+    "KY": {
+     "first": 169,
+     "last": 250
+    },
+    "LA": {
+     "first": 203,
+     "last": 325
+    },
+    "ME": {
+     "first": 68,
+     "last": 109
+    },
+    "MD": {
+     "first": 311,
+     "last": 502
+    },
+    "MA": {
+     "first": 386,
+     "last": 587
+    },
+    "MI": {
+     "first": 493,
+     "last": 709
+    },
+    "MN": {
+     "first": 341,
+     "last": 500
+    },
+    "MS": {
+     "first": 114,
+     "last": 157
+    },
+    "MO": {
+     "first": 324,
+     "last": 497
+    },
+    "MT": {
+     "first": 50,
+     "last": 84
+    },
+    "NE": {
+     "first": 122,
+     "last": 187
+    },
+    "NV": {
+     "first": 68,
+     "last": 126
+    },
+    "NH": {
+     "first": 69,
+     "last": 93
+    },
+    "NJ": {
+     "first": 305,
+     "last": 483
+    },
+    "NM": {
+     "first": 113,
+     "last": 170
+    },
+    "NY": {
+     "first": 1110,
+     "last": 1603
+    },
+    "NC": {
+     "first": 456,
+     "last": 768
+    },
+    "ND": {
+     "first": 48,
+     "last": 62
+    },
+    "OH": {
+     "first": 614,
+     "last": 978
+    },
+    "OK": {
+     "first": 162,
+     "last": 244
+    },
+    "OR": {
+     "first": 221,
+     "last": 346
+    },
+    "PA": {
+     "first": 676,
+     "last": 976
+    },
+    "RI": {
+     "first": 59,
+     "last": 80
+    },
+    "SC": {
+     "first": 140,
+     "last": 253
+    },
+    "SD": {
+     "first": 49,
+     "last": 79
+    },
+    "TN": {
+     "first": 315,
+     "last": 551
+    },
+    "TX": {
+     "first": 968,
+     "last": 1576
+    },
+    "UT": {
+     "first": 162,
+     "last": 261
+    },
+    "VT": {
+     "first": 40,
+     "last": 65
+    },
+    "VA": {
+     "first": 342,
+     "last": 513
+    },
+    "WA": {
+     "first": 404,
+     "last": 599
+    },
+    "WV": {
+     "first": 107,
+     "last": 150
+    },
+    "WI": {
+     "first": 325,
+     "last": 437
+    },
+    "WY": {
+     "first": 32,
+     "last": 46
+    }
+   }
+  },
+  "specialists": {
+   "national": [
+    {
+     "year": 2012,
+     "n": 3521
+    },
+    {
+     "year": 2013,
+     "n": 4041
+    },
+    {
+     "year": 2014,
+     "n": 4566
+    },
+    {
+     "year": 2015,
+     "n": 5133
+    },
+    {
+     "year": 2016,
+     "n": 5664
+    },
+    {
+     "year": 2017,
+     "n": 6134
+    },
+    {
+     "year": 2018,
+     "n": 6478
+    },
+    {
+     "year": 2019,
+     "n": 7030
+    },
+    {
+     "year": 2020,
+     "n": 7576
+    },
+    {
+     "year": 2021,
+     "n": 8073
+    },
+    {
+     "year": 2022,
+     "n": 8478
+    }
+   ],
+   "states": {
+    "AL": {
+     "first": 34,
+     "last": 100
+    },
+    "AK": {
+     "first": 11,
+     "last": 29
+    },
+    "AZ": {
+     "first": 70,
+     "last": 195
+    },
+    "AR": {
+     "first": 18,
+     "last": 52
+    },
+    "CA": {
+     "first": 398,
+     "last": 808
+    },
+    "CO": {
+     "first": 52,
+     "last": 141
+    },
+    "CT": {
+     "first": 26,
+     "last": 88
+    },
+    "DE": {
+     "first": 6,
+     "last": 21
+    },
+    "DC": {
+     "first": 1,
+     "last": 1
+    },
+    "FL": {
+     "first": 349,
+     "last": 922
+    },
+    "GA": {
+     "first": 52,
+     "last": 193
+    },
+    "HI": {
+     "first": 8,
+     "last": 23
+    },
+    "ID": {
+     "first": 28,
+     "last": 59
+    },
+    "IL": {
+     "first": 134,
+     "last": 317
+    },
+    "IN": {
+     "first": 91,
+     "last": 238
+    },
+    "IA": {
+     "first": 72,
+     "last": 129
+    },
+    "KS": {
+     "first": 35,
+     "last": 97
+    },
+    "KY": {
+     "first": 34,
+     "last": 145
+    },
+    "LA": {
+     "first": 18,
+     "last": 77
+    },
+    "ME": {
+     "first": 8,
+     "last": 42
+    },
+    "MD": {
+     "first": 38,
+     "last": 74
+    },
+    "MA": {
+     "first": 76,
+     "last": 187
+    },
+    "MI": {
+     "first": 119,
+     "last": 294
+    },
+    "MN": {
+     "first": 110,
+     "last": 206
+    },
+    "MS": {
+     "first": 22,
+     "last": 56
+    },
+    "MO": {
+     "first": 144,
+     "last": 238
+    },
+    "MT": {
+     "first": 13,
+     "last": 36
+    },
+    "NE": {
+     "first": 33,
+     "last": 58
+    },
+    "NV": {
+     "first": 15,
+     "last": 44
+    },
+    "NH": {
+     "first": 31,
+     "last": 52
+    },
+    "NJ": {
+     "first": 54,
+     "last": 173
+    },
+    "NM": {
+     "first": 33,
+     "last": 59
+    },
+    "NY": {
+     "first": 108,
+     "last": 284
+    },
+    "NC": {
+     "first": 51,
+     "last": 246
+    },
+    "ND": {
+     "first": 13,
+     "last": 28
+    },
+    "OH": {
+     "first": 92,
+     "last": 303
+    },
+    "OK": {
+     "first": 39,
+     "last": 97
+    },
+    "OR": {
+     "first": 127,
+     "last": 164
+    },
+    "PA": {
+     "first": 138,
+     "last": 355
+    },
+    "RI": {
+     "first": 5,
+     "last": 25
+    },
+    "SC": {
+     "first": 35,
+     "last": 135
+    },
+    "SD": {
+     "first": 17,
+     "last": 35
+    },
+    "TN": {
+     "first": 35,
+     "last": 122
+    },
+    "TX": {
+     "first": 365,
+     "last": 659
+    },
+    "UT": {
+     "first": 31,
+     "last": 67
+    },
+    "VT": {
+     "first": 4,
+     "last": 26
+    },
+    "VA": {
+     "first": 45,
+     "last": 182
+    },
+    "WA": {
+     "first": 127,
+     "last": 246
+    },
+    "WV": {
+     "first": 17,
+     "last": 48
+    },
+    "WI": {
+     "first": 132,
+     "last": 278
+    },
+    "WY": {
+     "first": 7,
+     "last": 24
+    }
+   }
+  },
+  "years": [
+   2012,
+   2022
+  ]
+ },
+ "sources": {
+  "medicaidLongitudinal": "hear_mcaidlong_V1_3.xlsx",
+  "medicaid2023": "hear_mcaidcross_V2_1.xlsx",
+  "privateMandates": "hear_priv_V2_1.xlsx",
+  "workforce": "hear_prof_V1.xlsx"
+ }
+}
