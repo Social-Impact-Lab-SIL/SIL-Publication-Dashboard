@@ -570,7 +570,7 @@ function Publications() {
       {PUBLICATIONS.map((p) => (
         <article key={p.doi} className="hh-pub">
           <p className="hh-pub__citation citation">{p.citation}</p>
-          <p className="hh-pub__venue">{p.venue} · <a href={`https://doi.org/${p.doi}`} target="_blank" rel="noopener noreferrer">doi:{p.doi}</a></p>
+          <p className="hh-pub__venue">{p.venue} · <a href={`https://doi.org/${p.doi}`}>doi:{p.doi}</a></p>
           <p className="hh-pub__note small">{p.note}</p>
         </article>
       ))}
@@ -600,8 +600,8 @@ function OpenData() {
       ))}
       <div className="hh-callout small" style={{ marginTop: 16 }}>
         <strong>Use the data.</strong> Dataset and replication materials:{" "}
-        {LINKS.openicpsr ? <a href={LINKS.openicpsr} target="_blank" rel="noopener noreferrer">OpenICPSR deposit</a> : <span>OpenICPSR deposit <span className="hh-callout__muted">(link to be added)</span></span>}
-        {" "}· <a href={LINKS.github} target="_blank" rel="noopener noreferrer">GitHub repository</a>
+        {LINKS.openicpsr ? <a href={LINKS.openicpsr}>OpenICPSR deposit</a> : <span>OpenICPSR deposit <span className="hh-callout__muted">(link to be added)</span></span>}
+        {" "}· <a href={LINKS.github}>GitHub repository</a>
       </div>
     </section>
   );
@@ -610,97 +610,10 @@ function OpenData() {
 /* ============================ app ============================ */
 
 export default function App() {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  // Close dropdown if clicking outside of it
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (!event.target.closest('#sil-nav-container')) {
-        setIsDropdownOpen(false);
-      }
-    };
-    document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
-  }, []);
-
   return (
     <>
       <header className="hh-header">
-        <div className="hh-header__inner" style={{ flexWrap: 'wrap', gap: '12px' }}>
-          
-          {/* Click-to-Toggle Dropdown Navigation Menu */}
-          <div id="sil-nav-container" style={{ position: 'relative', display: 'inline-block' }}>
-            <button 
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              style={{
-                backgroundColor: 'var(--accent-bg, #f1f8ff)',
-                color: 'var(--accent, #0366d6)',
-                padding: '8px 16px',
-                fontSize: '14px',
-                fontWeight: '600',
-                border: '1px solid var(--accent-border, #c8e1ff)',
-                borderRadius: '6px',
-                cursor: 'pointer',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px'
-              }}
-            >
-              📁 SIL Navigation {isDropdownOpen ? '▴' : '▾'}
-            </button>
-            {isDropdownOpen && (
-              <div style={{
-                position: 'absolute',
-                left: 0,
-                top: '100%',
-                backgroundColor: '#ffffff',
-                minWidth: '260px',
-                boxShadow: '0 8px 24px rgba(149, 157, 165, 0.2)',
-                border: '1px solid #e1e4e8',
-                borderRadius: '6px',
-                zIndex: 1000,
-                marginTop: '4px',
-                overflow: 'hidden',
-                textAlign: 'left'
-              }}>
-                <a 
-                  href="https://github.com/Social-Impact-Lab-SIL" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  onClick={() => setIsDropdownOpen(false)}
-                  style={{ color: '#24292e', padding: '10px 16px', textDecoration: 'none', display: 'block', fontSize: '14px', borderBottom: '1px solid #eaecef' }}
-                >
-                  🌐 SIL Landing Page
-                </a>
-                <a 
-                  href="https://social-impact-lab-sil.github.io/SIL-Publications-Archive/" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  onClick={() => setIsDropdownOpen(false)}
-                  style={{ color: '#24292e', padding: '10px 16px', textDecoration: 'none', display: 'block', fontSize: '14px', borderBottom: '1px solid #eaecef' }}
-                >
-                  📚 Publications Archive
-                </a>
-                <a 
-                  href="https://social-impact-lab-sil.github.io/SIL-Data-Repository/" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  onClick={() => setIsDropdownOpen(false)}
-                  style={{ color: '#24292e', padding: '10px 16px', textDecoration: 'none', display: 'block', fontSize: '14px', borderBottom: '1px solid #eaecef' }}
-                >
-                  🏠 Data Repository
-                </a>
-                <a 
-                  href="./" 
-                  onClick={() => setIsDropdownOpen(false)}
-                  style={{ color: '#24292e', padding: '10px 16px', textDecoration: 'none', display: 'block', fontSize: '14px' }}
-                >
-                  📊 Lab Dashboard
-                </a>
-              </div>
-            )}
-          </div>
-
+        <div className="hh-header__inner">
           <a className="hh-header__brand" href="#top" aria-label="Hearing Health Policy Database, top of page">
             <img className="logo-light" src={`${BASE}brand/hhpd-lockup.svg`} alt="Hearing Health Policy Database" width="179" height="40" />
             <img className="logo-dark" src={`${BASE}brand/hhpd-lockup-reversed.svg`} alt="Hearing Health Policy Database" width="179" height="40" />
