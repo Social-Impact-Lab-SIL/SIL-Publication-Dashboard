@@ -664,13 +664,22 @@ export default function App() {
                 textAlign: 'left'
               }}>
                 <a 
+                  href="https://social-impact-lab-sil.github.io" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  onClick={() => setIsDropdownOpen(false)}
+                  style={{ color: '#24292e', padding: '10px 16px', textDecoration: 'none', display: 'block', fontSize: '14px', borderBottom: '1px solid #eaecef' }}
+                >
+                  🏠 SIL Homepage
+                </a>
+                <a 
                   href="https://github.com/Social-Impact-Lab-SIL" 
                   target="_blank" 
                   rel="noopener noreferrer" 
                   onClick={() => setIsDropdownOpen(false)}
                   style={{ color: '#24292e', padding: '10px 16px', textDecoration: 'none', display: 'block', fontSize: '14px', borderBottom: '1px solid #eaecef' }}
                 >
-                  🌐 SIL Landing Page
+                  🌐 SIL GitHub
                 </a>
                 <a 
                   href="https://social-impact-lab-sil.github.io/SIL-Publications-Archive/" 
