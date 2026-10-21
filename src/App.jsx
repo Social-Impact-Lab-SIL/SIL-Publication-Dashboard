@@ -1,49 +1,26 @@
-import React, { useState, useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import DATA from "./data/hhpd.json";
 import {
-  ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip as RTooltip,
-  CartesianGrid, ReferenceDot,
-} from "recharts";
+  CITE, MEDICAID_SHARE, LIFE_COURSE, JAMA_OTO, INCOME_2023, PUBLICATIONS, LINKS,
+} from "./data/published.js";
 
 /* ============================================================
    HEARING HEALTH POLICY TRACKER
-   Social Impact Lab · University of Missouri
+   Hearing Health Policy Database · Social Impact Lab · University of Missouri
 
-   State-level data coded from:
-   - Arnold ML, Tonti L, Phillips S, et al. Longitudinal Trends in
-     Medicaid Hearing Aid Coverage for Adults in the United States:
-     2003–2023. Am J Audiol (2026). Table 1.
-   - Arnold ML, Tonti L, Phillips S, et al. Number of States Providing
-     Medicaid Hearing Aid Coverage for Adults Increased; Variability
-     Was Substantive, 2017–23. Health Aff. 2025;44(12):1522–1529.
-
-   NOTE: interior points of the beneficiary-share trend line are
-   approximated from Figure 2 of the AJA paper (published endpoints:
-   65.4% in 2008, 70.3% in 2023). Replace with exact dataset values.
+   State-level values come from src/data/hhpd.json, which
+   scripts/build_data.py computes from the database files.
+   Survey-based estimates come from src/data/published.js.
    ============================================================ */
 
-const C = {
-  bg: "#FAFAF8", ink: "#16243A", inkSoft: "#5A6577",
-  teal: "#0F5E63", tealLight: "#5FA8A0", amber: "#D9A21B",
-  rust: "#B0563B", none: "#D8DCD6", line: "#E4E6E1", card: "#FFFFFF",
-};
+const BASE = import.meta.env.BASE_URL;
+const NAMES = DATA.names;
+const ML = DATA.medicaidLongitudinal;
+const M23 = DATA.medicaid2023;
+const PRIV = DATA.privateMandates;
+const WF = DATA.workforce;
+const [ML_Y0, ML_Y1] = ML.years;
 
-/* ---- 2023 coverage status (HA 2025; AJA 2026 Table 1) ---- */
-const STATUS_2023 = {
-  covered: { label: "Hearing aids covered (adults 21+)", color: C.teal },
-  special: { label: "Special populations only", color: C.amber },
-  none: { label: "Not covered", color: C.none },
-};
-
-/* ---- Coverage continuity, Jan 2003 – Dec 2023 (AJA Table 1) ---- */
-const CONTINUITY = {
-  continuous: { label: "Continuous coverage", color: C.teal },
-  adopted: { label: "Adopted during period", color: C.tealLight },
-  interrupted: { label: "Interrupted, then restored", color: C.amber },
-  removed: { label: "Removed without restoring", color: C.rust },
-  never: { label: "No coverage at any time", color: C.none },
-};
-
-/* Tile-grid map coordinates [col, row] */
 const TILES = {
   AK: [0, 0], ME: [11, 0],
   WI: [5, 1], VT: [10, 1], NH: [11, 1],
@@ -55,174 +32,96 @@ const TILES = {
   HI: [0, 7], TX: [4, 7], FL: [9, 7],
 };
 
-const NAMES = {
-  AL: "Alabama", AK: "Alaska", AZ: "Arizona", AR: "Arkansas", CA: "California",
-  CO: "Colorado", CT: "Connecticut", DE: "Delaware", DC: "District of Columbia",
-  FL: "Florida", GA: "Georgia", HI: "Hawaii", ID: "Idaho", IL: "Illinois",
-  IN: "Indiana", IA: "Iowa", KS: "Kansas", KY: "Kentucky", LA: "Louisiana",
-  ME: "Maine", MD: "Maryland", MA: "Massachusetts", MI: "Michigan", MN: "Minnesota",
-  MS: "Mississippi", MO: "Missouri", MT: "Montana", NE: "Nebraska", NV: "Nevada",
-  NH: "New Hampshire", NJ: "New Jersey", NM: "New Mexico", NY: "New York",
-  NC: "North Carolina", ND: "North Dakota", OH: "Ohio", OK: "Oklahoma",
-  OR: "Oregon", PA: "Pennsylvania", RI: "Rhode Island", SC: "South Carolina",
-  SD: "South Dakota", TN: "Tennessee", TX: "Texas", UT: "Utah", VT: "Vermont",
-  VA: "Virginia", WA: "Washington", WV: "West Virginia", WI: "Wisconsin", WY: "Wyoming",
+/* Category scales — labels kept verbatim across Tracker, slides and posts */
+const STATUS_2023 = {
+  covered: "Hearing aids covered (adults 21+)",
+  special: "Special populations only",
+  none: "Not covered",
+};
+const CONTINUITY = {
+  continuous: "Continuous coverage",
+  adopted: "Adopted during period",
+  interrupted: "Interrupted, then restored",
+  removed: "Removed without restoring",
+  never: "No coverage at any time",
+};
+const PRIVATE = {
+  allAges: "Mandate with no age limit",
+  limited: "Mandate limited by age or to state employees",
+  none: "No mandate",
 };
 
-/* ---- Coded state data (AJA 2026, Table 1) ----
-   yearsCovered = years (of 21, 2003–2023) with any adult Medicaid
-   hearing aid coverage; part-year coverage counted as covered.
-   null = adoption timing differs across sources; see dataset. */
-const CONTINUOUS = ["CA","CT","HI","IL","IN","IA","MA","MN","MT","NE","NV","NH","NJ","NM","NY","ND","OH","OR","RI","SD","VT","WI","WY"];
-const NEVER = ["AL","AZ","AR","CO","DE","DC","GA","KY","LA","MS","NC","OK","PA","TN","VA","WV"];
-
-const STATE_DATA = {
-  ...Object.fromEntries(CONTINUOUS.map((s) => [s, {
-    status2023: "covered", continuity: "continuous", yearsCovered: 21,
-    note: "Coverage in effect throughout the 2003–2023 study period.",
-  }])),
-  ...Object.fromEntries(NEVER.map((s) => [s, {
-    status2023: "none", continuity: "never", yearsCovered: 0,
-    note: "No adult Medicaid hearing aid coverage at any point, 2003–2023.",
-  }])),
-  AK: { status2023: "covered", continuity: "adopted", yearsCovered: null,
-    note: "Late adoption; effective date differs across primary and secondary sources — see dataset." },
-  FL: { status2023: "covered", continuity: "adopted", yearsCovered: 18,
-    note: "Coverage removed July 2002; restored July 2006." },
-  ME: { status2023: "covered", continuity: "adopted", yearsCovered: 9,
-    note: "Coverage instated June 2015." },
-  MD: { status2023: "covered", continuity: "adopted", yearsCovered: 6,
-    note: "Coverage instated October 2018." },
-  KS: { status2023: "covered", continuity: "interrupted", yearsCovered: 21,
-    note: "Removed January 2003; restored July 2003." },
-  MI: { status2023: "covered", continuity: "interrupted", yearsCovered: 12,
-    note: "Removed July 2003; restored July 2004; removed July 2008; restored September 2018." },
-  TX: { status2023: "covered", continuity: "interrupted", yearsCovered: 20,
-    note: "Removed October 2003; restored October 2005." },
-  WA: { status2023: "covered", continuity: "interrupted", yearsCovered: 13,
-    note: "Removed January 2011; restored January 2019." },
-  ID: { status2023: "none", continuity: "removed", yearsCovered: 9,
-    note: "Coverage removed July 3, 2011, without restoration." },
-  SC: { status2023: "none", continuity: "removed", yearsCovered: 3,
-    note: "Coverage removed 2005, without restoration." },
-  MO: { status2023: "special", continuity: "removed", yearsCovered: 3,
-    note: "General coverage removed July 2005. Covers beneficiaries who are pregnant or have qualifying intellectual or physical disabilities." },
-  UT: { status2023: "special", continuity: "removed", yearsCovered: 6,
-    note: "General coverage removed November 2008. Covers pregnant beneficiaries only." },
+const SPECIAL_NOTES = {
+  MO: "Covers beneficiaries who are pregnant or who have qualifying intellectual or physical disabilities.",
+  UT: "Covers pregnant beneficiaries only.",
+};
+/* Places where the database files disagree with each other or with the article text */
+const DATA_NOTES = {
+  AK: "The longitudinal file codes Alaska as covered in every month from January 2003. Table 1 of the Am J Audiol article classifies Alaska as a late adopter, because primary legal texts show no policy in 2003.",
 };
 
-/* ---- Share of adult (21+) Medicaid beneficiaries with coverage ----
-   Endpoints published (65.4% in 2008; 70.3% in 2023); interior points
-   approximated from AJA Figure 2 — replace with exact values. */
-const TREND_DATA = [
-  { year: 2008, share: 65.4 }, { year: 2009, share: 64.0 },
-  { year: 2010, share: 63.8 }, { year: 2011, share: 62.6 },
-  { year: 2012, share: 62.5 }, { year: 2013, share: 63.0 },
-  { year: 2014, share: 63.4 }, { year: 2015, share: 63.9 },
-  { year: 2016, share: 64.3 }, { year: 2017, share: 64.4 },
-  { year: 2018, share: 65.0 }, { year: 2019, share: 70.5 },
-  { year: 2020, share: 71.0 }, { year: 2021, share: 71.0 },
-  { year: 2022, share: 71.0 }, { year: 2023, share: 70.3 },
-];
-
-/* ---- 2023 policy features among the 32 covering states (HA 2025) ---- */
-const FEATURES_2023 = [
-  { n: 32, of: 32, label: "One-time dispensing fee (initial fit and delivery)" },
-  { n: 30, of: 32, label: "Coverage for supplies beyond dispensing" },
-  { n: 24, of: 32, label: "Battery costs covered" },
-  { n: 22, of: 32, label: "Rehabilitation assessments beyond initial evaluation" },
-  { n: 6, of: 32, label: "Auditory training or rehabilitative treatment" },
-];
-
-/* ---- Mandated hearing aid coverage by age group, 2008 vs 2023 ----
-   (Arnold et al., under review: private mandates, Medicaid, VA, TRICARE;
-   traditional Medicare excluded — statutory hearing aid exclusion since 1965) */
-const LIFE_COURSE = [
-  { group: "Youth (under 18)", y2008: 34.1, y2023: 52.5, color: C.teal },
-  { group: "Adults 18–64", y2008: 10.2, y2023: 19.2, color: C.tealLight },
-  { group: "Adults 65+", y2008: 18.5, y2023: 16.9, color: C.rust },
-];
-
-const PUBLICATIONS = [
-  {
-    citation: "Arnold ML, Tonti L, Phillips S, Kershner SP, Lipton BJ, Heslin B, Ukert BD, Pesko MF. Number of States Providing Medicaid Hearing Aid Coverage for Adults Increased; Variability Was Substantive, 2017–23.",
-    venue: "Health Affairs. 2025;44(12):1522–1529",
-    doi: "10.1377/hlthaff.2025.00270",
-    note: "Cross-sectional policy surveillance of adult Medicaid hearing aid coverage as of December 31, 2023, merged with American Community Survey data to estimate national coverage rates and sociodemographic patterns.",
-  },
-  {
-    citation: "Arnold ML, Tonti L, Phillips S, Kershner SP, Lipton B, Heslin B, Ukert B, Hebert R, Pesko MF. Longitudinal Trends in Medicaid Hearing Aid Coverage for Adults in the United States: 2003–2023.",
-    venue: "American Journal of Audiology. 2026",
-    doi: "10.1044/2026_AJA-25-00204",
-    note: "Twenty-one years of triangulated policy surveillance documenting coverage adoptions, interruptions, and removals across all 50 states and D.C.",
-  },
-  {
-    citation: "Arnold ML, Phillips S, Tonti L, Kershner SP, Lipton B, Heslin B, Ukert B, Landini A, Pesko MF. Longitudinal Growth of Mandated Hearing Aid Benefits in the US, 2008–2023.",
-    venue: "Under review",
-    doi: null,
-    note: "The first systematic longitudinal analysis of mandated hearing aid coverage across private insurance, Medicaid, VA, and TRICARE — showing that guaranteed coverage declines across the life course even as clinical need rises.",
-  },
-  {
-    citation: "Arnold ML, Heslin B, Dowdy M, Kershner SP, Phillips S, Lipton B, Pesko MF. Longitudinal Policy Surveillance of Private Insurance Hearing Aid Mandates in the United States: 1997–2022.",
-    venue: "American Journal of Public Health. 2024;114(4):407–414",
-    doi: "10.2105/ajph.2023.307551",
-    note: "Companion surveillance of private insurance hearing aid mandates — 26 states as of 2022, most age-restricted.",
-  },
-];
+const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+function historyText(st) {
+  const t = ML.states[st].determination;
+  if (t === "Yes") return `Covered every month, January ${ML_Y0} to December ${ML_Y1}.`;
+  if (t === "No") return `No adult Medicaid hearing aid coverage at any point, ${ML_Y0}–${ML_Y1}.`;
+  const s = t
+    .replace(/(\d{1,2})\/(\d{1,2})\/(\d{4})/g, (_, m, d, y) => `${MONTHS[+m - 1]} ${+d}, ${y}`)
+    .replace(/(\d{2})\/(\d{4})/g, (_, m, y) => `${MONTHS[+m - 1]} ${y}`)
+    .replace(/Restored in/g, "restored")
+    .replace(/; /g, "; ")
+    .replace(/Yes, until/, "Covered until");
+  return s.charAt(0).toUpperCase() + s.slice(1).replace(/Restored/g, "restored").replace(/; Removed/g, "; removed") + ".";
+}
+const fmt = (n) => n.toLocaleString("en-US");
+const months = (v) => (/^\d+$/.test(v) ? `Every ${v} months` : "Not stated");
+const notStated = (v) => (v === "NS" ? "Not stated" : v);
 
 /* ============================ components ============================ */
 
-function Waveform() {
-  const abbrs = Object.keys(TILES).sort();
+function SectionTitle({ kicker, title }) {
   return (
-    <div>
-      <div style={{ display: "flex", alignItems: "flex-end", gap: 3, height: 110, padding: "8px 0" }}
-        aria-label="Each bar is one jurisdiction; height shows years with adult Medicaid hearing aid coverage, 2003 to 2023.">
-        {abbrs.map((abbr) => {
-          const d = STATE_DATA[abbr];
-          const yrs = d.yearsCovered;
-          const h = yrs === null ? 60 : 6 + (yrs / 21) * 96;
-          return (
-            <div key={abbr}
-              title={`${NAMES[abbr]} — ${yrs === null ? "covered; adoption timing varies by source" : `${yrs} of 21 years covered`}`}
-              style={{
-                width: 8, height: h, borderRadius: 2,
-                background: yrs === null ? "transparent" : STATUS_2023[d.status2023].color,
-                border: yrs === null ? `2px dashed ${C.teal}` : "none",
-              }} />
-          );
-        })}
-      </div>
-      <div style={{ fontSize: 12, color: C.inkSoft }}>
-        One bar per jurisdiction (A–Z) · height = years with adult Medicaid hearing aid coverage, 2003–2023 · color = 2023 status
-      </div>
+    <div className="hh-section-title">
+      <p className="hh-section-title__kicker kicker">{kicker}</p>
+      <h2 className="hh-section-title__title title">{title}</h2>
     </div>
   );
 }
 
-function TileMap({ view, selected, setSelected }) {
-  const size = 46, gap = 5, cols = 12, rows = 8;
-  const scheme = view === "status" ? STATUS_2023 : CONTINUITY;
-  const keyOf = (d) => (view === "status" ? d.status2023 : d.continuity);
+function Legend({ scheme, counts }) {
   return (
-    <svg viewBox={`0 0 ${cols * (size + gap)} ${rows * (size + gap)}`}
-      style={{ width: "100%", maxWidth: 640 }} role="img"
-      aria-label="Tile grid map of adult Medicaid hearing aid coverage by state">
-      {Object.entries(TILES).map(([abbr, [c, r]]) => {
-        const k = keyOf(STATE_DATA[abbr]);
-        const fill = scheme[k].color;
-        const lightText = fill !== C.none;
-        const isSel = selected === abbr;
+    <div className="hh-legend small">
+      {Object.entries(scheme).map(([k, label]) => (
+        <span key={k} className="hh-legend__item">
+          <span className={`hh-swatch fill-${k}`} />
+          {label}{counts ? ` (${counts[k] || 0})` : ""}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+function SourceNote({ children }) {
+  return <p className="hh-source source-note">{children}</p>;
+}
+
+function TileMap({ categoryOf, scheme, selected, onSelect, label }) {
+  const size = 46, gap = 5, cols = 12, rows = 8;
+  return (
+    <svg className="hh-tilemap" viewBox={`0 0 ${cols * (size + gap)} ${rows * (size + gap)}`} role="group" aria-label={label}>
+      {Object.entries(TILES).map(([st, [c, r]]) => {
+        const k = categoryOf(st);
+        const isSel = selected === st;
         return (
-          <g key={abbr} transform={`translate(${c * (size + gap)}, ${r * (size + gap)})`}
-            style={{ cursor: "pointer" }} onClick={() => setSelected(isSel ? null : abbr)}>
-            <rect width={size} height={size} rx={6} fill={fill}
-              stroke={isSel ? C.ink : "transparent"} strokeWidth={isSel ? 2.5 : 0} />
-            <text x={size / 2} y={size / 2 + 4} textAnchor="middle" fontSize={13} fontWeight={600}
-              fill={lightText ? "#FFFFFF" : C.inkSoft}
-              style={{ fontFamily: "'Public Sans', system-ui, sans-serif", pointerEvents: "none" }}>
-              {abbr}
-            </text>
+          <g key={st} className="hh-tile" transform={`translate(${c * (size + gap)}, ${r * (size + gap)})`}
+            tabIndex={0} role="button" aria-pressed={isSel} aria-label={`${NAMES[st]}: ${scheme[k]}`}
+            onClick={() => onSelect(isSel ? null : st)}
+            onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onSelect(isSel ? null : st); } }}>
+            <title>{`${NAMES[st]} — ${scheme[k]}`}</title>
+            <rect width={size} height={size} rx={6} className={`fill-${k}`} />
+            {isSel && <rect x={1.25} y={1.25} width={size - 2.5} height={size - 2.5} rx={5} className="sel" />}
+            <rect x={-3} y={-3} width={size + 6} height={size + 6} rx={8} className="focus" />
+            <text x={size / 2} y={size / 2 + 4} className={`text-${k}`}>{st}</text>
           </g>
         );
       })}
@@ -230,322 +129,541 @@ function TileMap({ view, selected, setSelected }) {
   );
 }
 
-function MapLegend({ view }) {
-  const scheme = view === "status" ? STATUS_2023 : CONTINUITY;
+function Toggles({ options, value, onChange, label }) {
   return (
-    <div style={{ display: "flex", flexWrap: "wrap", gap: 16, marginTop: 10 }}>
-      {Object.values(scheme).map((s) => (
-        <span key={s.label} style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 13, color: C.inkSoft }}>
-          <span style={{ width: 14, height: 14, borderRadius: 4, background: s.color, display: "inline-block" }} />
-          {s.label}
-        </span>
+    <div className="hh-toggles label" role="group" aria-label={label}>
+      {options.map(([k, l]) => (
+        <button key={k} type="button" className="hh-toggle" aria-pressed={value === k} onClick={() => onChange(k)}>{l}</button>
       ))}
     </div>
   );
 }
 
-function SlopeChart() {
-  const W = 560, H = 260, padX = 130, padY = 24;
-  const max = 60;
-  const y = (v) => H - padY - ((v / max) * (H - padY * 2));
+function Field({ label, swatch, children }) {
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", maxWidth: 620 }} role="img"
-      aria-label="Slope chart comparing mandated hearing aid coverage by age group in 2008 and 2023">
-      {[0, 20, 40, 60].map((v) => (
-        <line key={v} x1={padX} x2={W - padX} y1={y(v)} y2={y(v)} stroke={C.line} strokeWidth={1} />
-      ))}
-      <text x={padX} y={H - 4} textAnchor="middle" fontSize={13} fontWeight={700} fill={C.inkSoft}
-        style={{ fontFamily: "'Public Sans', system-ui, sans-serif" }}>2008</text>
-      <text x={W - padX} y={H - 4} textAnchor="middle" fontSize={13} fontWeight={700} fill={C.inkSoft}
-        style={{ fontFamily: "'Public Sans', system-ui, sans-serif" }}>2023</text>
-      {LIFE_COURSE.map((d) => (
-        <g key={d.group} style={{ fontFamily: "'Public Sans', system-ui, sans-serif" }}>
-          <line x1={padX} y1={y(d.y2008)} x2={W - padX} y2={y(d.y2023)} stroke={d.color} strokeWidth={3} />
-          <circle cx={padX} cy={y(d.y2008)} r={5} fill={d.color} />
-          <circle cx={W - padX} cy={y(d.y2023)} r={5} fill={d.color} />
-          <text x={padX - 10} y={y(d.y2008) + 4} textAnchor="end" fontSize={12.5} fill={C.ink} fontWeight={600}>
-            {d.y2008}%
-          </text>
-          <text x={W - padX + 10} y={y(d.y2023) + 4} fontSize={12.5} fill={C.ink} fontWeight={600}>
-            {d.y2023}% {d.group}
-          </text>
-        </g>
-      ))}
-    </svg>
+    <div className="panel-field">
+      <div className="panel-field__label kicker">{label}</div>
+      <div className="panel-field__value">
+        {swatch && <span className={`hh-swatch hh-swatch--sm fill-${swatch}`} />}
+        <span>{children}</span>
+      </div>
+    </div>
   );
 }
 
-function SectionTitle({ kicker, title }) {
+function CountList({ scheme, counts, prompt }) {
   return (
-    <div style={{ marginBottom: 16 }}>
-      <div style={{ fontSize: 12, letterSpacing: "0.14em", textTransform: "uppercase", color: C.teal, fontWeight: 700, marginBottom: 6 }}>
-        {kicker}
+    <div>
+      <p className="panel-note small">{prompt}</p>
+      {Object.entries(scheme).map(([k, l]) => (
+        <div key={k} className="panel-row small"><span>{l}</span><span>{counts[k] || 0}</span></div>
+      ))}
+    </div>
+  );
+}
+
+function Waveform() {
+  const abbrs = Object.keys(TILES).sort();
+  const statusOf = (st) => (ML.states[st].coveredDec ? "covered" : (SPECIAL_NOTES[st] ? "special" : "none"));
+  return (
+    <figure style={{ margin: 0 }}>
+      <div className="hh-waveform" role="img"
+        aria-label={`Bar chart: one bar per jurisdiction, height shows years with adult Medicaid hearing aid coverage, ${ML_Y0}–${ML_Y1}.`}>
+        {abbrs.map((st) => {
+          const yrs = ML.states[st].yearsCovered;
+          return (
+            <div key={st} className={`hh-waveform__bar fill-${statusOf(st)}`}
+              style={{ height: 6 + (yrs / ML.totalYears) * 96 }}
+              title={`${NAMES[st]} — ${yrs} of ${ML.totalYears} years covered`} />
+          );
+        })}
       </div>
-      <h2 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 30, fontWeight: 600, color: C.ink, margin: 0, lineHeight: 1.15 }}>
-        {title}
-      </h2>
+      <figcaption className="source-note" style={{ color: "var(--ink-soft)" }}>
+        One bar per jurisdiction (A–Z) · height = years with adult Medicaid hearing aid coverage, {ML_Y0}–{ML_Y1} · colour = status in December {ML_Y1} (teal covered, amber special populations only, grey not covered). Source: {CITE.aja}, study data.
+      </figcaption>
+    </figure>
+  );
+}
+
+/* Measure a container so charts draw at their real pixel width (legible text on phones) */
+function useWidth(fallback) {
+  const ref = useRef(null);
+  const [w, setW] = useState(fallback);
+  useEffect(() => {
+    if (!ref.current || typeof ResizeObserver === "undefined") return undefined;
+    const ro = new ResizeObserver(([e]) => setW(Math.round(e.contentRect.width) || fallback));
+    ro.observe(ref.current);
+    return () => ro.disconnect();
+  }, [fallback]);
+  return [ref, w];
+}
+
+/* Multi-series line chart with a hover readout. series: [{name, cls, points:[{x,y}]}] */
+function LineChart({ series, xMin, xMax, yMax, yTicks, unit = "", height = 300, ariaLabel }) {
+  const [hover, setHover] = useState(null);
+  const [ref, measured] = useWidth(900);
+  const W = Math.max(300, measured), H = height, padL = 44, padR = W < 560 ? 52 : 130, padT = 12, padB = 30;
+  const x = (v) => padL + ((v - xMin) / (xMax - xMin)) * (W - padL - padR);
+  const y = (v) => H - padB - (v / yMax) * (H - padT - padB);
+  const years = [];
+  for (let v = xMin; v <= xMax; v++) years.push(v);
+  const step = Math.ceil((xMax - xMin) / (W < 560 ? 4 : 8));
+  const valueAt = (s, v) => s.points.find((p) => p.x === v);
+  const lastPoints = series.map((s) => s.points[s.points.length - 1]);
+  // keep end labels from colliding
+  const labelY = lastPoints.map((p) => y(p.y));
+  if (labelY.length === 2 && Math.abs(labelY[0] - labelY[1]) < 16) {
+    const mid = (labelY[0] + labelY[1]) / 2;
+    const up = labelY[0] <= labelY[1] ? 0 : 1;
+    labelY[up] = mid - 9; labelY[1 - up] = mid + 9;
+  }
+  return (
+    <div className="chart-wrap" ref={ref}>
+      <svg className="chart" viewBox={`0 0 ${W} ${H}`} role="img" aria-label={ariaLabel}
+        onMouseLeave={() => setHover(null)}>
+        {yTicks.map((t) => (
+          <g key={t}>
+            <line className="grid" x1={padL} x2={W - padR} y1={y(t)} y2={y(t)} />
+            <text className="axis-text" x={padL - 8} y={y(t) + 4} textAnchor="end">{fmt(t)}{unit}</text>
+          </g>
+        ))}
+        {years.filter((v) => ((v - xMin) % step === 0 && xMax - v >= step * 0.8) || v === xMax).map((v) => (
+          <text key={v} className="axis-text" x={x(v)} y={H - 8} textAnchor="middle">{v}</text>
+        ))}
+        {hover !== null && <line className="hover-line" x1={x(hover)} x2={x(hover)} y1={padT} y2={H - padB} />}
+        {series.map((s, i) => (
+          <g key={s.name}>
+            <polyline fill="none" strokeWidth={2.5} strokeLinejoin="round" className={`series-${i + 1}`}
+              points={s.points.map((p) => `${x(p.x)},${y(p.y)}`).join(" ")} />
+            {hover !== null && valueAt(s, hover) && <circle className={`dot-${i + 1}`} r={4} cx={x(hover)} cy={y(valueAt(s, hover).y)} />}
+            <circle className={`dot-${i + 1}`} r={3.5} cx={x(lastPoints[i].x)} cy={y(lastPoints[i].y)} />
+            <text className="end-label" x={x(lastPoints[i].x) + 10} y={labelY[i] + 4}>{fmt(lastPoints[i].y)}{unit}{W < 560 ? "" : ` ${s.short || s.name}`}</text>
+          </g>
+        ))}
+        {years.map((v) => (
+          <rect key={v} className="hit" x={x(v) - (W - padL - padR) / (xMax - xMin) / 2} y={padT}
+            width={(W - padL - padR) / (xMax - xMin)} height={H - padT - padB}
+            onMouseEnter={() => setHover(v)} />
+        ))}
+      </svg>
+      {hover !== null && (
+        <div className="chart-tip" style={{ left: `${(x(hover) / W) * 100}%`, top: 0 }}>
+          <strong>{hover}</strong>
+          {series.map((s) => {
+            const p = valueAt(s, hover);
+            return <div key={s.name}>{s.name}: {p ? `${fmt(p.y)}${unit}` : "no data"}</div>;
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function SlopeChart() {
+  const [ref, measured] = useWidth(620);
+  const W = Math.max(300, Math.min(640, measured)), H = 270, padY = 26, max = 60;
+  const padX = W < 480 ? 50 : 120;
+  const x2 = W - (W < 480 ? 110 : 180);
+  const y = (v) => H - padY - (v / max) * (H - padY * 2);
+  // spread end labels so close values (19.2% and 16.9%) do not overlap
+  const spread = (key) => {
+    const ys = LIFE_COURSE.map((d) => ({ k: d.key, v: y(d[key]) })).sort((a, b) => a.v - b.v);
+    for (let i = 1; i < ys.length; i++) if (ys[i].v - ys[i - 1].v < 16) ys[i].v = ys[i - 1].v + 16;
+    return Object.fromEntries(ys.map((o) => [o.k, o.v]));
+  };
+  const L08 = spread("y2008"), L23 = spread("y2023");
+  return (
+    <div ref={ref} style={{ maxWidth: 640 }}>
+    <svg className="chart" viewBox={`0 0 ${W} ${H}`} role="img"
+      aria-label="Slope chart: share of each age group with mandated hearing aid coverage, 2008 and 2023">
+      {[0, 20, 40, 60].map((v) => (
+        <g key={v}>
+          <line className="grid" x1={padX} x2={x2} y1={y(v)} y2={y(v)} />
+        </g>
+      ))}
+      <text className="axis-text" x={padX} y={H - 4} textAnchor="middle" fontWeight={700}>2008</text>
+      <text className="axis-text" x={x2} y={H - 4} textAnchor="middle" fontWeight={700}>2023</text>
+      {LIFE_COURSE.map((d) => (
+        <g key={d.key} className={`lc-${d.key}`}>
+          <title>{`${d.group}: ${d.y2008}% in 2008 (95% CI ${d.ci2008}) to ${d.y2023}% in 2023 (95% CI ${d.ci2023})`}</title>
+          <line x1={padX} y1={y(d.y2008)} x2={x2} y2={y(d.y2023)} strokeWidth={3} />
+          <circle cx={padX} cy={y(d.y2008)} r={5} stroke="none" />
+          <circle cx={x2} cy={y(d.y2023)} r={5} stroke="none" />
+          <text className="lc-label" x={padX - 10} y={L08[d.key] + 4} textAnchor="end">{d.y2008.toFixed(1)}%</text>
+          <text className="lc-label" x={x2 + 10} y={L23[d.key] + 4}>{d.y2023.toFixed(1)}% {W < 480 ? d.short : d.group}</text>
+        </g>
+      ))}
+    </svg>
+    </div>
+  );
+}
+
+function FeatureBar({ yes, of, label, sub }) {
+  return (
+    <div className="hh-feature">
+      <div className="hh-feature__track" aria-hidden="true">
+        <div className={`hh-feature__fill${yes / of < 0.5 ? " hh-feature__fill--low" : ""}`} style={{ width: `${(yes / of) * 100}%` }} />
+      </div>
+      <div className="hh-feature__count body">{yes} of {of}</div>
+      <div className="hh-feature__label small">{label}{sub ? <span> · {sub}</span> : null}</div>
     </div>
   );
 }
 
 function Stat({ value, label }) {
   return (
-    <div style={{ minWidth: 150 }}>
-      <div style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 40, fontWeight: 600, color: C.teal, lineHeight: 1 }}>
-        {value}
-      </div>
-      <div style={{ fontSize: 13.5, color: C.inkSoft, marginTop: 6, lineHeight: 1.45, maxWidth: 200 }}>{label}</div>
+    <div className="hh-stat">
+      <div className="hh-stat__value stat">{value}</div>
+      <div className="hh-stat__label small">{label}</div>
     </div>
+  );
+}
+
+/* ============================ sections ============================ */
+
+function MedicaidMap() {
+  const [view, setView] = useState("status");
+  const [sel, setSel] = useState(null);
+  const scheme = view === "status" ? STATUS_2023 : CONTINUITY;
+  const categoryOf = (st) => (view === "status" ? M23.status[st] : ML.states[st].continuity);
+  const counts = view === "status" ? M23.statusCounts : ML.continuityCounts;
+  const b = sel && M23.states[sel];
+  return (
+    <section id="medicaid" className="hh-card">
+      <SectionTitle kicker={`Medicaid · adults 21+ · ${ML_Y0}–${ML_Y1}`} title="Medicaid coverage by jurisdiction" />
+      <Toggles label="Map view" value={view} onChange={(v) => { setView(v); }}
+        options={[["status", "Coverage in 2023"], ["continuity", `Continuity, ${ML_Y0}–${String(ML_Y1).slice(2)}`]]} />
+      <div className="map-layout">
+        <div className="map-layout__map">
+          <TileMap label="Tile map of adult Medicaid hearing aid coverage. Select a state for details." categoryOf={categoryOf} scheme={scheme} selected={sel} onSelect={setSel} />
+          <Legend scheme={scheme} />
+        </div>
+        <aside className="map-layout__panel" aria-live="polite">
+          {sel ? (
+            <div>
+              <h3 className="subtitle" style={{ margin: "0 0 10px" }}>{NAMES[sel]}</h3>
+              <Field label="Status, December 2023" swatch={M23.status[sel]}>{STATUS_2023[M23.status[sel]]}</Field>
+              <Field label={`Continuity, ${ML_Y0}–${ML_Y1}`} swatch={ML.states[sel].continuity}>{CONTINUITY[ML.states[sel].continuity]}</Field>
+              <Field label="Years with coverage">{ML.states[sel].yearsCovered} of {ML.totalYears}</Field>
+              <p className="panel-note small">{historyText(sel)}</p>
+              {SPECIAL_NOTES[sel] && <p className="panel-note small">{SPECIAL_NOTES[sel]}</p>}
+              {b && (
+                <div className="small" style={{ marginTop: 10 }}>
+                  <div className="panel-row"><span>Hearing loss eligibility</span><span>{b.eligibility}</span></div>
+                  <div className="panel-row"><span>Benefit frequency</span><span>{months(b.frequency)}</span></div>
+                  <div className="panel-row"><span>Cost sharing</span><span>{notStated(b.costSharing)}</span></div>
+                  <div className="panel-row"><span>Hearing aids</span><span>{b.aids}</span></div>
+                </div>
+              )}
+              {M23.notInBenefitFile.includes(sel) && <p className="panel-note small">Coverage was in place in December 2023. Benefit details for 2023 are not yet coded for this state.</p>}
+              {DATA_NOTES[sel] && <p className="panel-flag small"><strong>Data note.</strong> {DATA_NOTES[sel]}</p>}
+              <button type="button" className="panel-clear small" onClick={() => setSel(null)}>Show all states</button>
+            </div>
+          ) : (
+            <CountList scheme={scheme} counts={counts} prompt="Select a state to see its coverage history and 2023 benefit details." />
+          )}
+        </aside>
+      </div>
+      <SourceNote>
+        {view === "status"
+          ? <>Sources: {CITE.ha} and {CITE.aja}, study data; status as of December 31, 2023. Missouri and Utah cover specific populations only.</>
+          : <>Source: {CITE.aja}; study data (monthly coverage, January {ML_Y0}–December {ML_Y1}). Part-year coverage counted as a covered year.</>}
+      </SourceNote>
+    </section>
+  );
+}
+
+function PrivateMap() {
+  const [sel, setSel] = useState(null);
+  const s = sel && PRIV.states[sel];
+  const n = PRIV.statusCounts.allAges + PRIV.statusCounts.limited;
+  return (
+    <section id="private" className="hh-card">
+      <SectionTitle kicker={`Private insurance · ${PRIV.years[0]}–${PRIV.years[1]}`} title="Private insurance mandates by jurisdiction" />
+      <p className="hh-card__body body">
+        {n} states require fully insured private health plans to cover hearing aids. {PRIV.statusCounts.limited} of
+        them limit the mandate to children and young adults or to state employees. Self-insured employer plans are
+        exempt from state mandates under federal law (ERISA).
+      </p>
+      <div className="map-layout">
+        <div className="map-layout__map">
+          <TileMap label="Tile map of private insurance hearing aid mandates. Select a state for details." categoryOf={(st) => PRIV.states[st].status} scheme={PRIVATE} selected={sel} onSelect={setSel} />
+          <Legend scheme={PRIVATE} />
+        </div>
+        <aside className="map-layout__panel" aria-live="polite">
+          {sel ? (
+            <div>
+              <h3 className="subtitle" style={{ margin: "0 0 10px" }}>{NAMES[sel]}</h3>
+              <Field label={`Status, December ${PRIV.years[1]}`} swatch={s.status}>{PRIVATE[s.status]}</Field>
+              {s.status !== "none" && (
+                <div className="small">
+                  <div className="panel-row"><span>Mandate in effect since</span><span>{s.since}</span></div>
+                  <div className="panel-row"><span>Ages covered</span><span>{s.ageMax}</span></div>
+                  <div className="panel-row"><span>Hearing aids</span><span>{s.allowance}</span></div>
+                  <div className="panel-row"><span>Dollar limit</span><span>{/^\d+$/.test(s.dollarLimit) ? `$${fmt(+s.dollarLimit)}` : s.dollarLimit}</span></div>
+                  <div className="panel-row"><span>Benefit frequency</span><span>{months(s.frequency)}</span></div>
+                  {s.exceptions.length > 0 && <p className="panel-note" style={{ marginTop: 10 }}>{s.exceptions.join(". ")}.</p>}
+                </div>
+              )}
+              <button type="button" className="panel-clear small" onClick={() => setSel(null)}>Show all states</button>
+            </div>
+          ) : (
+            <CountList scheme={PRIVATE} counts={PRIV.statusCounts} prompt="Select a state to see the terms of its mandate." />
+          )}
+        </aside>
+      </div>
+      <SourceNote>Source: {CITE.ajph}; study data (monthly, January {PRIV.years[0]}–December {PRIV.years[1]}). Terms shown are those in effect in December {PRIV.years[1]}; "since" is the first month any mandate applied.</SourceNote>
+    </section>
+  );
+}
+
+function Trends() {
+  const series = [
+    { name: "Medicaid coverage for adults", short: "Medicaid", points: ML.countsByYear.map((d) => ({ x: d.year, y: d.states })) },
+    { name: "Private insurance mandate", short: "Private mandate", points: PRIV.countsByYear.map((d) => ({ x: d.year, y: d.states })) },
+  ];
+  const c = Object.fromEntries(ML.countsByYear.map((d) => [d.year, d.states]));
+  return (
+    <section id="trends" className="hh-card">
+      <SectionTitle kicker={`${PRIV.years[0]}–${ML_Y1}`} title="Number of states with coverage over time" />
+      <p className="hh-card__body body">
+        Adult Medicaid coverage fell from {c[ML_Y0]} states in {ML_Y0} to {c[2013]} in 2013 and recovered to {c[ML_Y1]} in {ML_Y1}.
+        The number of states with a private insurance mandate has grown every few years since the first took effect in 2001 and has never fallen. In {MEDICAID_SHARE.from.year},
+        {" "}{MEDICAID_SHARE.from.pct}% of adult Medicaid beneficiaries lived in a state with coverage; by {MEDICAID_SHARE.to.year}
+        {" "}it was {MEDICAID_SHARE.to.pct}%, with the largest change ({MEDICAID_SHARE.jump.pp} percentage points) between
+        {" "}{MEDICAID_SHARE.jump.from} and {MEDICAID_SHARE.jump.to}, when Maryland, Michigan and Washington started or reinstated coverage.
+      </p>
+      <div className="hh-legend small" style={{ marginBottom: 8 }}>
+        <span className="hh-legend__item"><span className="hh-swatch hh-swatch--line" style={{ background: "var(--teal)" }} />Medicaid coverage for adults (21+), any part of the year</span>
+        <span className="hh-legend__item"><span className="hh-swatch hh-swatch--line" style={{ background: "var(--series-2)" }} />Private insurance mandate, any part of the year</span>
+      </div>
+      <LineChart series={series} xMin={PRIV.years[0]} xMax={ML_Y1} yMax={51} yTicks={[0, 10, 20, 30, 40, 50]}
+        ariaLabel="Line chart of the number of states with adult Medicaid hearing aid coverage and with private insurance mandates, by year" />
+      <SourceNote>
+        Counts of the 50 states and D.C. with the policy in effect for any part of each year. Medicaid counts exclude Missouri and Utah after they limited coverage to special populations.
+        Sources: {CITE.aja} and {CITE.ajph}, study data. Beneficiary shares: {CITE.aja}.
+      </SourceNote>
+    </section>
+  );
+}
+
+function LifeCourse() {
+  return (
+    <section id="lifecourse" className="hh-card">
+      <SectionTitle kicker="All coverage types · 2008–2023" title="Mandated coverage shrinks across the life course" />
+      <p className="hh-card__body body">
+        Across private insurance mandates, Medicaid, the VA and TRICARE, the share of people with legally mandated
+        hearing aid coverage rose for youth and working-age adults but fell for adults 65 and older. Coverage grew
+        {" "}{JAMA_OTO.growthVsOlder.youth} percentage points per year faster for youth than for older adults. Traditional
+        Medicare has excluded hearing aids by statute since 1965.
+      </p>
+      <SlopeChart />
+      <SourceNote>
+        Share of each age group with mandated hearing aid coverage. Estimates from {JAMA_OTO.respondents} American Community Survey respondents,
+        2008–2023; hover a line for 95% confidence intervals. Source: {CITE.jamaOto}.
+      </SourceNote>
+
+      <h3 className="hh-subhead">Mandated coverage by household income, 2023</h3>
+      <p className="hh-card__body body">
+        Because Medicaid is the main route to mandated coverage, people below the federal poverty threshold were more likely
+        to have it than people above it in every age group. Even so, most adults below the threshold had no mandated coverage.
+      </p>
+      <div className="table-scroll">
+        <table className="hh-table">
+          <caption className="sr-only">Percentage with mandated hearing aid coverage by age group and household characteristics, 2023</caption>
+          <thead>
+            <tr><th scope="col">Age group</th><th scope="col" className="num">Below poverty threshold</th><th scope="col" className="num">At or above threshold</th><th scope="col" className="num">Renters</th><th scope="col" className="num">Homeowners</th></tr>
+          </thead>
+          <tbody>
+            {INCOME_2023.map((r) => (
+              <tr key={r.group}>
+                <th scope="row" style={{ fontWeight: 600, color: "var(--ink)" }}>{r.group}</th>
+                {[r.below, r.atAbove, r.renter, r.owner].map((v, i) => <td key={i} className="num">{v.toFixed(1)}%</td>)}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <SourceNote>Percentage of each group with mandated hearing aid coverage, 2023, weighted. Source: {CITE.jamaOto}, Table 4.</SourceNote>
+    </section>
+  );
+}
+
+function PolicyFeatures() {
+  const n = M23.covering;
+  const e = M23.eligibility;
+  const f = M23.frequency;
+  return (
+    <section id="features" className="hh-card">
+      <SectionTitle kicker="Medicaid benefit design · 2023" title="What Medicaid coverage includes" />
+      <p className="hh-card__body body">
+        Among the {n} covering states with 2023 benefit details coded{M23.notInBenefitFile.length ? ` (all except ${M23.notInBenefitFile.map((k) => NAMES[k]).join(" and ")})` : ""}, benefit design varied. A state can cover a
+        hearing aid yet leave out the services that make sustained use possible.
+      </p>
+      <div>
+        {M23.features.map((ft) => (
+          <FeatureBar key={ft.key} yes={ft.yes} of={ft.of} label={ft.label}
+            sub={ft.notStated ? `not stated in ${ft.notStated}` : null} />
+        ))}
+      </div>
+      <p className="small" style={{ color: "var(--ink-soft)", marginTop: 16, maxWidth: "var(--prose-width)" }}>
+        Eligibility: {e["Any HL"]} states covered any degree of hearing loss, {e["At Provider's Discretion"]} left eligibility to
+        provider discretion and {e["Mild HL or Greater"]} required at least mild hearing loss. The most common benefit
+        period was every 60 months ({f["60"]} states).
+      </p>
+      <SourceNote>Counts of covering states, including Missouri and Utah. Source: {CITE.ha}, study data.</SourceNote>
+    </section>
+  );
+}
+
+function Workforce() {
+  const [st, setSt] = useState("");
+  const [y0, y1] = WF.years;
+  const series = [
+    { name: "Audiologists", points: WF.audiologists.national.map((d) => ({ x: d.year, y: d.n })) },
+    { name: "Hearing instrument specialists", short: "Specialists", points: WF.specialists.national.map((d) => ({ x: d.year, y: d.n })) },
+  ];
+  const a = WF.audiologists.national, h = WF.specialists.national;
+  const pct = (s) => Math.round(((s[s.length - 1].n - s[0].n) / s[0].n) * 100);
+  const sorted = useMemo(() => Object.keys(NAMES).sort((p, q) => NAMES[p].localeCompare(NAMES[q])), []);
+  return (
+    <section id="workforce" className="hh-card">
+      <SectionTitle kicker={`Hearing care workforce · ${y0}–${y1}`} title="Audiologists and hearing instrument specialists" />
+      <p className="hh-card__body body">
+        Registered audiologists rose from {fmt(a[0].n)} to {fmt(a[a.length - 1].n)} ({pct(a)}%) and hearing instrument
+        specialists from {fmt(h[0].n)} to {fmt(h[h.length - 1].n)} ({pct(h)}%) between December {y0} and December {y1}.
+      </p>
+      <div className="hh-legend small" style={{ marginBottom: 8 }}>
+        <span className="hh-legend__item"><span className="hh-swatch hh-swatch--line" style={{ background: "var(--teal)" }} />Audiologists</span>
+        <span className="hh-legend__item"><span className="hh-swatch hh-swatch--line" style={{ background: "var(--series-2)" }} />Hearing instrument specialists</span>
+      </div>
+      <LineChart series={series} xMin={y0} xMax={y1} yMax={25000} yTicks={[0, 5000, 10000, 15000, 20000, 25000]} height={280}
+        ariaLabel="Line chart of the national number of audiologists and hearing instrument specialists, 2012 to 2022" />
+      <div style={{ marginTop: 20, display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
+        <label htmlFor="wf-state" className="label">State</label>
+        <select id="wf-state" className="hh-select" value={st} onChange={(e) => setSt(e.target.value)}>
+          <option value="">Choose a state</option>
+          {sorted.map((k) => <option key={k} value={k}>{NAMES[k]}</option>)}
+        </select>
+      </div>
+      {st && (
+        <div className="table-scroll" style={{ marginTop: 12, maxWidth: 520 }}>
+          <table className="hh-table">
+            <caption className="sr-only">{NAMES[st]} workforce counts</caption>
+            <thead><tr><th scope="col">{NAMES[st]}</th><th scope="col" className="num">Dec {y0}</th><th scope="col" className="num">Dec {y1}</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Audiologists</th><td className="num">{fmt(WF.audiologists.states[st].first)}</td><td className="num">{fmt(WF.audiologists.states[st].last)}</td></tr>
+              <tr><th scope="row">Hearing instrument specialists</th><td className="num">{fmt(WF.specialists.states[st].first)}</td><td className="num">{fmt(WF.specialists.states[st].last)}</td></tr>
+            </tbody>
+          </table>
+        </div>
+      )}
+      <SourceNote>Providers registered in the National Plan and Provider Enumeration System (NPPES), December of each year. Source: {CITE.workforce}, eTables 2–3.</SourceNote>
+    </section>
+  );
+}
+
+function Publications() {
+  return (
+    <section id="publications" className="hh-card">
+      <SectionTitle kicker="Evidence base" title="Publications" />
+      {PUBLICATIONS.map((p) => (
+        <article key={p.doi} className="hh-pub">
+          <p className="hh-pub__citation citation">{p.citation}</p>
+          <p className="hh-pub__venue">{p.venue} · <a href={`https://doi.org/${p.doi}`}>doi:{p.doi}</a></p>
+          <p className="hh-pub__note small">{p.note}</p>
+        </article>
+      ))}
+    </section>
+  );
+}
+
+function OpenData() {
+  const sets = [
+    { name: "Medicaid hearing aid coverage for adults, monthly, 2003–2023", file: DATA.sources.medicaidLongitudinal, cite: CITE.aja, desc: "Coverage in place for adult (21+) beneficiaries by state and month, with a coverage determination for each jurisdiction." },
+    { name: "Key policy features of state Medicaid hearing aid coverage for adults, 2023", file: DATA.sources.medicaid2023, cite: CITE.ha, desc: "Eligibility, benefit frequency, cost sharing, reimbursement, provider type and covered services for each covering state." },
+    { name: "Private insurance hearing aid mandates, monthly, 1997–2023", file: DATA.sources.privateMandates, cite: CITE.ajph, desc: "Mandate status, age limits, provider type, allowances, dollar limits and exceptions by state and month, with a summary of changes." },
+    { name: "Hearing care workforce, 2012–2022", file: DATA.sources.workforce, cite: CITE.workforce, desc: "NPPES counts of audiologists and hearing instrument specialists by state, three times a year." },
+  ];
+  return (
+    <section id="data" className="hh-card">
+      <SectionTitle kicker="Resources" title="Open data" />
+      <p className="hh-card__body body">
+        The Hearing Health Policy Database is actively maintained and updated. Each file below records its coding sources,
+        notes and version. Every state-level chart on this page is computed directly from these files.
+      </p>
+      {sets.map((s) => (
+        <div key={s.file} className="dataset">
+          <p className="dataset__name body">{s.name}</p>
+          <p className="dataset__meta small">{s.desc} File: {s.file}. Cite as {s.cite}.</p>
+        </div>
+      ))}
+      <div className="hh-callout small" style={{ marginTop: 16 }}>
+        <strong>Use the data.</strong> Dataset and replication materials:{" "}
+        {LINKS.openicpsr ? <a href={LINKS.openicpsr}>OpenICPSR deposit</a> : <span>OpenICPSR deposit <span className="hh-callout__muted">(link to be added)</span></span>}
+        {" "}· <a href={LINKS.github}>GitHub repository</a>
+      </div>
+    </section>
   );
 }
 
 /* ============================ app ============================ */
 
-export default function HearingPolicyDashboard() {
-  const [view, setView] = useState("status");
-  const [selected, setSelected] = useState(null);
-
-  const counts = useMemo(() => {
-    const scheme = view === "status" ? STATUS_2023 : CONTINUITY;
-    const tally = Object.fromEntries(Object.keys(scheme).map((k) => [k, 0]));
-    Object.values(STATE_DATA).forEach((d) => tally[view === "status" ? d.status2023 : d.continuity]++);
-    return tally;
-  }, [view]);
-
-  const card = { background: C.card, border: `1px solid ${C.line}`, borderRadius: 12, padding: 24 };
-
+export default function App() {
   return (
-    <div style={{ background: C.bg, minHeight: "100vh", color: C.ink, fontFamily: "'Public Sans', system-ui, -apple-system, sans-serif" }}>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Public+Sans:wght@400;600;700&display=swap');
-        @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
-        a { color: ${C.teal}; }
-      `}</style>
-
-      <header style={{ borderBottom: `1px solid ${C.line}`, background: C.card }}>
-        <div style={{ maxWidth: 980, margin: "0 auto", padding: "16px 24px", display: "flex", justifyContent: "space-between", alignItems: "baseline", flexWrap: "wrap", gap: 8 }}>
-          <div>
-            <div style={{ fontSize: 12, letterSpacing: "0.14em", textTransform: "uppercase", color: C.inkSoft, fontWeight: 700 }}>
-              Social Impact Lab · University of Missouri
-            </div>
-            <div style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 22, fontWeight: 600 }}>
-              Hearing Health Policy Tracker
-            </div>
-          </div>
-          <nav style={{ display: "flex", gap: 18, fontSize: 14, fontWeight: 600 }}>
-            <a href="#map" style={{ textDecoration: "none" }}>Coverage map</a>
-            <a href="#trends" style={{ textDecoration: "none" }}>Trends</a>
-            <a href="#lifecourse" style={{ textDecoration: "none" }}>Life course</a>
-            <a href="#features" style={{ textDecoration: "none" }}>Policy features</a>
-            <a href="#publications" style={{ textDecoration: "none" }}>Publications</a>
-            <a href="#data" style={{ textDecoration: "none" }}>Open data</a>
+    <>
+      <header className="hh-header">
+        <div className="hh-header__inner">
+          <a className="hh-header__brand" href="#top" aria-label="Hearing Health Policy Database, top of page">
+            <img className="logo-light" src={`${BASE}brand/hhpd-lockup.svg`} alt="Hearing Health Policy Database" width="179" height="40" />
+            <img className="logo-dark" src={`${BASE}brand/hhpd-lockup-reversed.svg`} alt="Hearing Health Policy Database" width="179" height="40" />
+          </a>
+          <nav className="hh-nav label" aria-label="Sections">
+            <a href="#medicaid">Medicaid</a>
+            <a href="#private">Private insurance</a>
+            <a href="#trends">Trends</a>
+            <a href="#lifecourse">Life course</a>
+            <a href="#features">Policy features</a>
+            <a href="#workforce">Workforce</a>
+            <a href="#publications">Publications</a>
+            <a href="#data">Open data</a>
           </nav>
         </div>
       </header>
 
-      <main style={{ maxWidth: 980, margin: "0 auto", padding: "40px 24px 80px" }}>
-        {/* Hero */}
-        <section style={{ marginBottom: 56 }}>
-          <h1 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: "clamp(30px, 4.5vw, 44px)", fontWeight: 600, lineHeight: 1.12, margin: "0 0 14px", maxWidth: 780 }}>
-            Tracking Medicaid hearing aid coverage for adults across the United States
-          </h1>
-          <p style={{ fontSize: 17, color: C.inkSoft, maxWidth: 700, lineHeight: 1.6, margin: "0 0 28px" }}>
-            Two decades of legal epidemiology surveillance tracking adult Medicaid hearing aid
-            coverage across all 50 states and the District of Columbia. Coverage looks stable in
-            the aggregate — but that stability masks adoptions, interruptions, and removals that
-            disrupt care for beneficiaries who depend on it.
+      <main id="top">
+        <section className="hero">
+          <p className="kicker" style={{ color: "var(--ink-soft)", margin: "0 0 10px" }}>Hearing Health Policy Tracker</p>
+          <h1 className="display">Tracking hearing aid coverage policy across the United States</h1>
+          <p className="lead">
+            Legal epidemiology surveillance of hearing aid coverage law in the 50 states and D.C.: adult Medicaid coverage
+            since {ML_Y0}, private insurance mandates since {PRIV.years[0]}, and mandated coverage across Medicaid, private
+            insurance, the VA and TRICARE. Built for researchers, advocates and the policymakers deciding what comes next.
           </p>
-          <div style={{ display: "flex", gap: 40, flexWrap: "wrap", marginBottom: 30 }}>
-            <Stat value="32" label="states covered hearing aids for adult Medicaid beneficiaries as of December 2023" />
-            <Stat value="70.3%" label="of adult Medicaid beneficiaries lived in a state with coverage in 2023, up from 65.4% in 2008" />
-            <Stat value="16" label="states never covered adult hearing aids at any point from 2003 through 2023" />
+          <div className="hh-stats">
+            <Stat value={M23.coveringTotal} label={`states covered hearing aids for adult Medicaid beneficiaries in December 2023, ${M23.statusCounts.special} of them for special populations only`} />
+            <Stat value={`${MEDICAID_SHARE.to.pct}%`} label={`of adult Medicaid beneficiaries lived in a state with coverage in ${MEDICAID_SHARE.to.year}, up from ${MEDICAID_SHARE.from.pct}% in ${MEDICAID_SHARE.from.year}`} />
+            <Stat value={ML.continuityCounts.never} label={`jurisdictions never covered adult hearing aids through Medicaid, ${ML_Y0}–${ML_Y1}`} />
+            <Stat value={`${LIFE_COURSE[2].y2023}%`} label={`of adults 65 and older had mandated hearing aid coverage in 2023, down from ${LIFE_COURSE[2].y2008}% in 2008`} />
           </div>
           <Waveform />
         </section>
 
-        {/* Map */}
-        <section id="map" style={{ ...card, marginBottom: 32 }}>
-          <SectionTitle kicker="Policy surveillance · 2003–2023" title="Coverage by jurisdiction" />
-          <div style={{ display: "flex", gap: 8, marginBottom: 20, flexWrap: "wrap" }}>
-            {[["status", "Coverage in 2023"], ["continuity", "Continuity, 2003–23"]].map(([key, label]) => (
-              <button key={key} onClick={() => { setView(key); setSelected(null); }}
-                style={{
-                  padding: "8px 16px", borderRadius: 999, fontSize: 14, fontWeight: 600,
-                  border: `1.5px solid ${view === key ? C.teal : C.line}`,
-                  background: view === key ? C.teal : "transparent",
-                  color: view === key ? "#fff" : C.ink, cursor: "pointer",
-                }}>
-                {label}
-              </button>
-            ))}
-          </div>
+        <MedicaidMap />
+        <PrivateMap />
+        <Trends />
+        <LifeCourse />
+        <PolicyFeatures />
+        <Workforce />
+        <Publications />
+        <OpenData />
 
-          <div style={{ display: "flex", gap: 28, flexWrap: "wrap" }}>
-            <div style={{ flex: "1 1 420px", minWidth: 320 }}>
-              <TileMap view={view} selected={selected} setSelected={setSelected} />
-              <MapLegend view={view} />
-            </div>
-            <aside style={{ flex: "0 1 270px", minWidth: 250 }}>
-              {selected ? (
-                <div>
-                  <div style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 24, fontWeight: 600, marginBottom: 10 }}>
-                    {NAMES[selected]}
-                  </div>
-                  <div style={{ marginBottom: 10 }}>
-                    <div style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: "0.1em", color: C.inkSoft, fontWeight: 700 }}>
-                      Status, December 2023
-                    </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 15 }}>
-                      <span style={{ width: 11, height: 11, borderRadius: 3, background: STATUS_2023[STATE_DATA[selected].status2023].color }} />
-                      {STATUS_2023[STATE_DATA[selected].status2023].label}
-                    </div>
-                  </div>
-                  <div style={{ marginBottom: 10 }}>
-                    <div style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: "0.1em", color: C.inkSoft, fontWeight: 700 }}>
-                      Continuity, 2003–2023
-                    </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 15 }}>
-                      <span style={{ width: 11, height: 11, borderRadius: 3, background: CONTINUITY[STATE_DATA[selected].continuity].color }} />
-                      {CONTINUITY[STATE_DATA[selected].continuity].label}
-                    </div>
-                  </div>
-                  <div style={{ fontSize: 13.5, color: C.inkSoft, lineHeight: 1.55 }}>
-                    {STATE_DATA[selected].note}
-                  </div>
-                </div>
-              ) : (
-                <div>
-                  <div style={{ fontSize: 14, color: C.inkSoft, marginBottom: 14 }}>
-                    Select a state to see its coverage history.
-                  </div>
-                  {Object.entries(view === "status" ? STATUS_2023 : CONTINUITY).map(([k, s]) => (
-                    <div key={k} style={{ display: "flex", justifyContent: "space-between", padding: "8px 0", borderBottom: `1px solid ${C.line}`, fontSize: 14 }}>
-                      <span style={{ color: C.inkSoft }}>{s.label}</span>
-                      <span style={{ fontWeight: 700 }}>{counts[k]}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </aside>
-          </div>
-          <div style={{ fontSize: 12, color: C.inkSoft, marginTop: 16, lineHeight: 1.5 }}>
-            Source: Arnold et al., Am J Audiol (2026), Table 1, and Arnold et al., Health Affairs (2025).
-            Missouri and Utah cover specific populations only. Part-year coverage counted as covered.
-          </div>
-        </section>
-
-        {/* Trends */}
-        <section id="trends" style={{ ...card, marginBottom: 32 }}>
-          <SectionTitle kicker="2008 – 2023" title="Share of beneficiaries living in states with coverage" />
-          <p style={{ fontSize: 15, color: C.inkSoft, maxWidth: 660, lineHeight: 1.6, marginTop: 0 }}>
-            Share of adult Medicaid beneficiaries (ages 21+) residing in a state with hearing aid
-            coverage. The most notable change is the 5.5 percentage-point increase between 2018
-            and 2019, when Maryland, Michigan, and Washington started or reinstated coverage
-            within the same half-year period.
-          </p>
-          <div style={{ width: "100%", height: 300 }}>
-            <ResponsiveContainer>
-              <AreaChart data={TREND_DATA} margin={{ top: 10, right: 12, left: -8, bottom: 0 }}>
-                <CartesianGrid stroke={C.line} vertical={false} />
-                <XAxis dataKey="year" tick={{ fontSize: 12, fill: C.inkSoft }} tickLine={false} />
-                <YAxis domain={[0, 100]} unit="%" tick={{ fontSize: 12, fill: C.inkSoft }} tickLine={false} axisLine={false} />
-                <RTooltip formatter={(v) => [`${v}%`, "Beneficiaries with coverage"]}
-                  contentStyle={{ borderRadius: 8, border: `1px solid ${C.line}`, fontSize: 13 }} />
-                <Area type="monotone" dataKey="share" stroke={C.teal} fill={C.teal} fillOpacity={0.14} strokeWidth={2.5} />
-                <ReferenceDot x={2008} y={65.4} r={4} fill={C.teal} stroke="#fff" />
-                <ReferenceDot x={2023} y={70.3} r={4} fill={C.teal} stroke="#fff" />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
-          <div style={{ fontSize: 12, color: C.inkSoft, marginTop: 8, lineHeight: 1.5 }}>
-            Published endpoints: 65.4% (2008) and 70.3% (2023). Interior values approximated from
-            Arnold et al. (2026), Figure 2 — to be replaced with exact dataset values. State counts
-            over the period: 32 states (2003) → 27 (2013) → 32 (2023).
-          </div>
-        </section>
-
-        {/* Life course */}
-        <section id="lifecourse" style={{ ...card, marginBottom: 32 }}>
-          <SectionTitle kicker="Across all coverage types · 2008 – 2023" title="Mandated coverage shrinks across the life course" />
-          <p style={{ fontSize: 15, color: C.inkSoft, maxWidth: 680, lineHeight: 1.6, marginTop: 0 }}>
-            Looking beyond Medicaid — across private insurance mandates, Medicaid, VA, and
-            TRICARE — the share of Americans with legally mandated hearing aid coverage rises for
-            youth and working-age adults but has declined for adults 65 and older, the group with
-            the greatest clinical need. Traditional Medicare has excluded hearing aids by statute
-            since 1965.
-          </p>
-          <SlopeChart />
-          <div style={{ fontSize: 12, color: C.inkSoft, marginTop: 10, lineHeight: 1.5 }}>
-            Share of each age group with mandated hearing aid coverage through private insurance
-            mandates, Medicaid, VA, or TRICARE. Source: Arnold et al., Longitudinal Growth of
-            Mandated Hearing Aid Benefits in the US, 2008–2023 (manuscript under review; findings
-            subject to change pending peer review).
-          </div>
-        </section>
-
-        {/* Policy features */}
-        <section id="features" style={{ ...card, marginBottom: 32 }}>
-          <SectionTitle kicker="Beyond yes or no" title="What coverage actually includes" />
-          <p style={{ fontSize: 15, color: C.inkSoft, maxWidth: 660, lineHeight: 1.6, marginTop: 0 }}>
-            Among the 32 covering states in 2023, benefit design varied substantially. A state can
-            cover a hearing aid yet omit the services that make sustained use possible.
-          </p>
-          <div style={{ marginTop: 8 }}>
-            {FEATURES_2023.map((f) => (
-              <div key={f.label} style={{ display: "flex", alignItems: "center", gap: 14, padding: "10px 0", borderBottom: `1px solid ${C.line}` }}>
-                <div style={{ flex: "0 0 200px", height: 10, background: "#EEF0EC", borderRadius: 5, overflow: "hidden" }}>
-                  <div style={{ width: `${(f.n / f.of) * 100}%`, height: "100%", background: f.n / f.of > 0.5 ? C.teal : C.rust, borderRadius: 5 }} />
-                </div>
-                <div style={{ fontWeight: 700, minWidth: 64, fontSize: 15 }}>{f.n} of {f.of}</div>
-                <div style={{ fontSize: 14.5, color: C.inkSoft, lineHeight: 1.4 }}>{f.label}</div>
-              </div>
-            ))}
-          </div>
-          <div style={{ fontSize: 13.5, color: C.inkSoft, marginTop: 16, lineHeight: 1.6, maxWidth: 700 }}>
-            Eligibility also diverged: 11 states covered any degree of hearing loss, 13 left
-            eligibility to provider discretion, and 8 required at least mild hearing loss. The most
-            common benefit-use period was 60 months. Source: Arnold et al., Health Affairs (2025).
-          </div>
-        </section>
-
-        {/* Publications */}
-        <section id="publications" style={{ ...card, marginBottom: 32 }}>
-          <SectionTitle kicker="Evidence base" title="Publications" />
-          {PUBLICATIONS.map((p, i) => (
-            <div key={i} style={{ padding: "16px 0", borderBottom: i < PUBLICATIONS.length - 1 ? `1px solid ${C.line}` : "none" }}>
-              <div style={{ fontWeight: 600, fontSize: 15.5, marginBottom: 4, lineHeight: 1.45 }}>{p.citation}</div>
-              <div style={{ fontSize: 13, color: C.teal, fontWeight: 700, marginBottom: 6 }}>
-                {p.venue}{p.doi ? ` · doi:${p.doi}` : ""}
-              </div>
-              <div style={{ fontSize: 14, color: C.inkSoft, lineHeight: 1.55 }}>{p.note}</div>
-            </div>
-          ))}
-        </section>
-
-        {/* Open data */}
-        <section id="data" style={{ ...card }}>
-          <SectionTitle kicker="Resources" title="Open data" />
-          <p style={{ fontSize: 15, color: C.inkSoft, maxWidth: 660, lineHeight: 1.6, marginTop: 0 }}>
-            The Hearing Health Policy Database — state-level adult Medicaid hearing aid coverage
-            policies with primary legal sources, triangulation documentation, and policy feature
-            coding — is actively maintained and continues to be updated. Interactive coverage maps
-            accompany the Health Affairs article at healthaffairs.org.
-          </p>
-          <div style={{ marginTop: 16, padding: 18, borderRadius: 10, background: "#F0F4F2", border: `1px solid ${C.line}`, fontSize: 14, lineHeight: 1.6 }}>
-            <strong>Use the data.</strong> Dataset and replication materials:{" "}
-            <a href="#" onClick={(e) => e.preventDefault()}>OpenICPSR deposit</a> ·{" "}
-            <a href="#" onClick={(e) => e.preventDefault()}>GitHub repository</a>
-            <span style={{ color: C.inkSoft }}> (links to be added)</span>
-          </div>
-        </section>
-
-        <footer style={{ marginTop: 48, fontSize: 13, color: C.inkSoft, lineHeight: 1.6 }}>
-          Hearing Health Policy Tracker · Social Impact Lab, University of Missouri. Research
-          supported by NIDCD grant R01 DC019661. Coding follows policy surveillance and data
-          triangulation methods; coverage determinations are documented with primary legal texts.
-          This tracker is for informational purposes and does not constitute legal advice.
+        <footer className="site-footer small">
+          <p>Hearing Health Policy Tracker · Hearing Health Policy Database · Social Impact Lab, University of Missouri.</p>
+          <p>Research supported by NIDCD grant R01 DC019661. Coding follows policy surveillance and data triangulation methods; coverage determinations are documented with primary legal texts.</p>
+          <p>This tracker is for informational purposes and does not constitute legal advice.</p>
         </footer>
       </main>
-    </div>
+    </>
   );
 }
