@@ -626,10 +626,10 @@ export default function App() {
   return (
     <>
       <header className="hh-header">
-        <div className="hh-header__inner" style={{ flexWrap: 'wrap', gap: '12px' }}>
+        <div className="hh-header__inner" style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', alignItems: 'center' }}>
           
           {/* Click-to-Toggle Dropdown Navigation Menu */}
-          <div id="sil-nav-container" style={{ position: 'relative', display: 'inline-block' }}>
+          <div id="sil-nav-container" style={{ position: 'relative', display: 'inline-block', flexShrink: 0 }}>
             <button 
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               style={{
@@ -710,7 +710,7 @@ export default function App() {
             )}
           </div>
 
-          <a className="hh-header__brand" href="#top" aria-label="Hearing Health Policy Database, top of page">
+          <a className="hh-header__brand" href="#top" aria-label="Hearing Health Policy Database, top of page" style={{ display: 'inline-flex', alignItems: 'center', flexShrink: 0 }}>
             <img className="logo-light" src={`${BASE}brand/hhpd-lockup.svg`} alt="Hearing Health Policy Database" width="179" height="40" />
             <img className="logo-dark" src={`${BASE}brand/hhpd-lockup-reversed.svg`} alt="Hearing Health Policy Database" width="179" height="40" />
           </a>
