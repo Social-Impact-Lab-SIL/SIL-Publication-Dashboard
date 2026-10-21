@@ -3,8 +3,6 @@ import DATA from "./data/hhpd.json";
 import {
   CITE, MEDICAID_SHARE, LIFE_COURSE, JAMA_OTO, INCOME_2023, PUBLICATIONS, LINKS,
 } from "./data/published.js";
-import logoLight from "./brand/hhpd-lockup.svg";
-import logoDark from "./brand/hhpd-lockup-reversed.svg";
 
 /* ============================================================
    HEARING HEALTH POLICY TRACKER
@@ -15,6 +13,7 @@ import logoDark from "./brand/hhpd-lockup-reversed.svg";
    Survey-based estimates come from src/data/published.js.
    ============================================================ */
 
+const BASE = import.meta.env.BASE_URL;
 const NAMES = DATA.names;
 const ML = DATA.medicaidLongitudinal;
 const M23 = DATA.medicaid2023;
@@ -627,10 +626,10 @@ export default function App() {
   return (
     <>
       <header className="hh-header">
-        <div className="hh-header__inner" style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', alignItems: 'center' }}>
+        <div className="hh-header__inner" style={{ flexWrap: 'wrap', gap: '12px' }}>
           
           {/* Click-to-Toggle Dropdown Navigation Menu */}
-          <div id="sil-nav-container" style={{ position: 'relative', display: 'inline-block', flexShrink: 0 }}>
+          <div id="sil-nav-container" style={{ position: 'relative', display: 'inline-block' }}>
             <button 
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               style={{
@@ -711,9 +710,9 @@ export default function App() {
             )}
           </div>
 
-          <a className="hh-header__brand" href="#top" aria-label="Hearing Health Policy Database, top of page" style={{ display: 'inline-flex', alignItems: 'center', flexShrink: 0 }}>
-            <img className="logo-light" src={logoLight} alt="Hearing Health Policy Database" width="179" height="40" />
-            <img className="logo-dark" src={logoDark} alt="Hearing Health Policy Database" width="179" height="40" />
+          <a className="hh-header__brand" href="#top" aria-label="Hearing Health Policy Database, top of page">
+            <img className="logo-light" src={`${BASE}brand/hhpd-lockup.svg`} alt="Hearing Health Policy Database" width="179" height="40" />
+            <img className="logo-dark" src={`${BASE}brand/hhpd-lockup-reversed.svg`} alt="Hearing Health Policy Database" width="179" height="40" />
           </a>
           <nav className="hh-nav label" aria-label="Sections">
             <a href="#medicaid">Medicaid</a>
