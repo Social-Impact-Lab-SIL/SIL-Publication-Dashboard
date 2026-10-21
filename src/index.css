@@ -1,9 +1,8 @@
 /* Hearing Health Policy Database — tokens and component styles.
    Values from the HHPD design system (tokens.json). Light is primary; dark follows the OS setting. */
 
-@font-face { font-family: "Fraunces"; src: url("/fonts/Fraunces-Variable.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
-@font-face { font-family: "Public Sans"; src: url("/fonts/PublicSans-Variable.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
-
+@font-face { font-family: "Fraunces"; src: url("./fonts/Fraunces-Variable.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "Public Sans"; src: url("./fonts/PublicSans-Variable.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
 :root {
   --paper: #fafaf8; --surface: #ffffff; --surface-sunken: #f0f4f2; --track: #eef0ec; --line: #e4e6e1;
   --ink: #16243a; --ink-soft: #5a6577;
