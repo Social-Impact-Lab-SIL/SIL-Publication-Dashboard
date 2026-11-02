@@ -636,8 +636,9 @@ function OpenData() {
       ))}
       <div className="hh-callout small" style={{ marginTop: 16 }}>
         <strong>Use the data.</strong> Download the files from the{" "}
-        <a href={LINKS.openicpsr}>ICPSR repository record</a> ({LINKS.repositoryLabel}). Site code is in the{" "}
-        <a href={LINKS.github}>GitHub repository</a>.
+        <a href="https://social-impact-lab-sil.github.io/SIL-Data-Repository/Hearing-Healthcare-Policy/" target="_blank" rel="noopener noreferrer">Hearing Healthcare Policy data repository</a>, or from the{" "}
+        <a href={LINKS.openicpsr} target="_blank" rel="noopener noreferrer">ICPSR repository record</a> ({LINKS.repositoryLabel}). Site code is in the{" "}
+        <a href={LINKS.github} target="_blank" rel="noopener noreferrer">GitHub repository</a>.
         <span className="hh-callout__muted"> Any publication or public output using these data must cite the associated peer-reviewed article and the versioned repository record.</span>
       </div>
     </section>
